@@ -33,7 +33,7 @@ from src.utils.utils import parse_argument, write_pred_inference_df
 import jiwer
 import time
 
-from src.inference.benchmark.afrispeech_inference import AfriSpeechWhisperDataset, LibriSpeechDataset, transcribe_whisper_wav2vec
+from src.inference.afrispeech_inference import AfriSpeechWhisperDataset, LibriSpeechDataset, transcribe_whisper_wav2vec
 
 
 data_home = "data"
