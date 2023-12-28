@@ -5,29 +5,21 @@
 
 import os
 
-data_home = "data"
-os.environ['TRANSFORMERS_CACHE'] = f'/{data_home}/.cache/'
-os.environ['XDG_CACHE_HOME'] = f'/{data_home}/.cache/'
-
 import gc
 import numpy as np
 import torch
 import time
 import pandas as pd
 import whisper
-import jiwer
 from datasets import load_dataset
-from whisper.normalizers import EnglishTextNormalizer
 from tqdm import tqdm
-from transformers import AutoProcessor, AutoModelForCTC
-from transformers import Wav2Vec2Processor, AutoModelForCTC
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
-
 from src.utils.audio_processing import load_audio_file, AudioConfig
-from src.utils.prepare_dataset import load_afri_speech_data, DISCRIMINATIVE
-from src.utils.text_processing import clean_text, strip_task_tags, get_task_tags
-from src.utils.utils import parse_argument, write_pred_inference_df
-from src.train.models import Wav2Vec2ForCTCnCLS
+from src.utils.prepare_dataset import load_afri_speech_data
+from src.utils.text_processing import  strip_task_tags, get_task_tags
+
+data_home = "data"
+os.environ['TRANSFORMERS_CACHE'] = f'/{data_home}/.cache/'
+os.environ['XDG_CACHE_HOME'] = f'/{data_home}/.cache/'
 
 gc.collect()
 torch.cuda.empty_cache()
@@ -36,7 +28,7 @@ processor = None
 device = None
 
 
-class AfriSpeechWhisperDataset(torch.utils.data.Dataset):
+class WhisperWav2VecDataset(torch.utils.data.Dataset):
     """
     A simple class to wrap AfriSpeech and trim/pad the audio to 30 seconds.
     It will drop the last few seconds of a very small portion of the utterances.
@@ -184,12 +176,3 @@ def transcribe_whisper_wav2vec(args, model, loader, split):
 
 
 
-#python3 src/inference/afrispeech-inference.py --model_id_or_path /data3/2mruns/wav2vec2-large-xlsr-53-2m-4x4gpu_cosine_restart/checkpoints/checkpoint-190575  --gpu 1 --batchsize  8 --audio_dir  /data4/data/  --data_csv  /data/data/data_index/1m_data_index/val_8jan23_47453-all_data_augs_procs-43432-clean.csv
-
-#python3 src/inference/afrispeech-inference.py --model_id_or_path /data3/prod/models_frame_based_chunking/wav2vec-robust/checkpoint-4gpu-1692  --gpu 1 --batchsize  16 --audio_dir  /data3/prod/personalize/ --data_csv  /data3/prod/personalizations_2023-07-25_local.csv
-#python3 src/inference/afrispeech-inference.py --model_id_or_path /data3/prod/models_frame_based_chunking/wav2vec-robust/checkpoint-4gpu-1692  --gpu 1 --batchsize  16 --audio_dir  /data3/prod/personalize/ --data_csv  /data3/prod/personalizations_2023-07-25_local.csv
-#python3 src/inference/afrispeech-inference.py --model_id_or_path /data3/lr_exp/src/experiments/facebook/mms_300m/checkpoints  --gpu 1 --batchsize  8 --audio_dir  /data/data/intron/  --data_csv data/intron-test-public-6346-clean.csv
-# #python3 src/inference/afrispeech-inference.py --model_id_or_path /data3/prod/models_frame_based_chunking/wav2vec-robust/checkpoint-4gpu-1692  --gpu 1 --batchsize  16 --audio_dir  /data/data/intron/ --data_csv  /data3/prod/personalizations_2023-07-25_local.csv
-
-# python3 src.inference.afrispeech-inference --model_id_or_path src/experiments/wav2vec2_large_robust_2m_group_lengths_4x4gpu-new_normal_lr_e8/checkpoints/checkpoint-39325  --gpu 1 --batchsize  3 --audio_dir  /data/data/intron/ --data_csv  /data/data/data_index/1m_data_index/train_8jan23_1246693-all_data_augs_procs-2487460-clean.csv
-#
