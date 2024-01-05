@@ -28,7 +28,7 @@ Before running the benchmark, you need to specify the model name or path in the 
 model=<model name/path>
 ```
 
-Replace `<model name/path>` with the actual name or path to your model.
+Replace `<model name/path>` with the actual name or path to your model. After doing this, ensure to edit `audio_paths` in the configuration from `/data4` to reflect the correct mount point or directory where your dataset is located on your device.
 
 ## Step 3: Run the Benchmark
 
