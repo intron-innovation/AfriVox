@@ -30,12 +30,11 @@ os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 gc.collect()
 torch.cuda.empty_cache()
 
-processor = None
 device = None
 tsince = 0
 
 
-def transcribe_nemo(args, model, dataset, split):
+def transcribe_nemo(args, model,  dataset, split):
     transcription = model.transcribe(dataset["audio_paths"], batch_size=args.batchsize)
     data = pd.DataFrame(
         dict(
@@ -43,7 +42,7 @@ def transcribe_nemo(args, model, dataset, split):
             reference=dataset["text"].tolist(),
             audio_paths=dataset["audio_paths"].tolist(),
             accent=dataset["accent"].tolist(),
-            audio_id=dataset["audio_id"].tolist(),
+            sample_id=dataset["sample_id"].tolist(),
         )
     )
 
@@ -53,6 +52,8 @@ def transcribe_nemo(args, model, dataset, split):
 if __name__ == "__main__":
     args = parse_argument()
     os.makedirs(args.output_dir, exist_ok=True)
+    global processor
+
 
     device = torch.device(
         "cuda" if (torch.cuda.is_available() and args.gpu > -1) else "cpu"
@@ -84,28 +85,6 @@ if __name__ == "__main__":
         data = transcribe_nemo(args, model, dataset, split)
 
     else:
-        if "librispeech" in args.data_csv_path:
-            dataset = LibriSpeechDataset(
-                data_path="librispeech_asr",
-                split="test",
-                model_id=args.model_id_or_path,
-                device=device,
-            )
-            split = "test-libri-speech"
-
-        else:
-            split = args.data_csv_path.split("-")[1]
-            dataset = WhisperWav2VecDataset(
-                data_path=args.data_csv_path,
-                max_audio_len_secs=args.max_audio_len_secs,
-                audio_dir=args.audio_dir,
-                device=device,
-                split=split,
-                gpu=args.gpu,
-                model_id=args.model_id_or_path,
-            )
-        data_loader = torch.utils.data.DataLoader(dataset, batch_size=args.batchsize)
-
         if "whisper" in args.model_id_or_path:
             # load model and processor
             try:
@@ -127,11 +106,32 @@ if __name__ == "__main__":
         else:
             processor = AutoProcessor.from_pretrained(args.model_id_or_path)
             model = AutoModelForCTC.from_pretrained(args.model_id_or_path).to(device)
-
         model = model.to(device)
         model.eval()
+        if "librispeech" in args.data_csv_path:
+            dataset = LibriSpeechDataset(
+                data_path="librispeech_asr",
+                split="test",
+                model_id=args.model_id_or_path,
+                device=device,
+            )
+            split = "test-libri-speech"
+
+        else:
+            split = args.data_csv_path.split("-")[1]
+            dataset = WhisperWav2VecDataset(
+                data_path=args.data_csv_path,
+                max_audio_len_secs=args.max_audio_len_secs,
+                audio_dir=args.audio_dir,
+                device=device,
+                split=split,
+                gpu=args.gpu,
+                model_id=args.model_id_or_path, 
+                processor=processor
+            )
+        data_loader = torch.utils.data.DataLoader(dataset, batch_size=args.batchsize)
         tsince = int(round(time.time()))
-        data = transcribe_whisper_wav2vec(args, model, data_loader, split)
+        data = transcribe_whisper_wav2vec(args, model, processor, data_loader, split)
 
     pred_clean = [clean_text(text) for text in data["hypothesis"]]
     ref_clean = [clean_text(text) for text in data["reference"]]
@@ -166,23 +166,25 @@ if __name__ == "__main__":
     predictions_df, output_path = write_pred_inference_df(
         args.model_id_or_path, data, all_wer, split=split
     )
-
     # === if  split is 2m
-    if "source" in dataset.columns:
+    ref_dataset = pd.read_csv(args.data_csv_path)
+
+    if "source" in ref_dataset.columns:
         breakdown_results = {}
         breakdown_results["model"] = args.model_id_or_path
         breakdown_results["data_csv_path"] = args.data_csv_path
         breakdown_results["all_wer"] = all_wer
-        dataset = dataset.rename(columns={"audio_path": "audio_paths"})
-        merged_data = data.merged(
-            dataset[["audio_id", "source", "project_name"]], on="audio_id"
+        dataset = ref_dataset.rename(columns={"audio_path": "audio_paths"})
+        merged_data = data.merge(
+            ref_dataset[["sample_id", "source", "project_name"]], on="sample_id"
         )
-        sources_wer = merged_data.groupby("source")["wer"].mean().to_dict()
+        sources_wer = merged_data.groupby("source")["wer"].mean().round(4).to_dict()
         source_wer = {f"source_{k}": v for k, v in sources_wer.items()}
         intron_project_wer = (
             merged_data[merged_data["source"] == "intron"]
             .groupby("project_name")["wer"]
             .mean()
+            .round(4)
             .to_dict()
         )
         intron_project_wer = {f"projects_{k}": v for k, v in intron_project_wer.items()}
@@ -193,14 +195,13 @@ if __name__ == "__main__":
         # breakdown to projects
         # load logging csv
         logging_path = "results/benchmark_breakdown.csv"
-
         try:
             logging_csv = pd.read_csv(logging_path)
-            logging_csv = logging_csv.append(breakdown_results)
+            logging_csv = logging_csv.append(breakdown_results, ignore_index=True)
 
         except:
             logging_csv = pd.DataFrame()
-            logging_csv = logging_csv.append(breakdown_results)
+            logging_csv = logging_csv.append(breakdown_results, ignore_index=True)
         logging_csv.to_csv(logging_path, index=False)
         print("results breakdown: ", breakdown_results)
 
@@ -209,3 +210,4 @@ if __name__ == "__main__":
         f"{args.model_id_or_path}-- Inference Time: {time_elapsed / 60:.4f}m | "
         f"{time_elapsed / len(data):.4f}s per sample"
     )
+    print("++++++=============================================+++++++++++++++++++++ \n Done with inference.")

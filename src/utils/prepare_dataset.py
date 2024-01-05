@@ -67,14 +67,10 @@ def load_afri_speech_data(
     :param data_path: str
     :return: Dataset instance
     """
-    data = pd.read_csv(data_path)#.iloc[:10000]
+    data = pd.read_csv(data_path)#.iloc[:50]
     
     print(f"start {split}: {data.shape}")
-    # data['duration'] =15
-    # data['accent'] = "yoruba"
-    # data['domain'] ='general'
-    # data['transcript'] =data['text'] 
-    # data['audio_paths'] = "/data/robust_models/prod/prod_chunking/" + data['local_path']
+  
     
     if "audio_paths" in data.columns:
         if split == 'aug':

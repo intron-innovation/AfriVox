@@ -1,6 +1,6 @@
 .DS_Store
 .idea/
 src/__pycache__/
+src/utils/__pycache__/
 *__pycache__*
-aws/*
 notebooks/.ipynb_checkpoints*
