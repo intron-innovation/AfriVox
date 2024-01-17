@@ -135,3 +135,40 @@ def parse_argument():
 
 
     return parser.parse_args()
+
+
+def breakdown_wer(args, ref_dataset, pred_data, all_wer):
+    breakdown_results = {}
+    breakdown_results["model"] = args.model_id_or_path
+    breakdown_results["data_csv_path"] = args.data_csv_path
+    breakdown_results["all_wer"] = all_wer
+    dataset = ref_dataset.rename(columns={"audio_path": "audio_paths"})
+    merged_data = pred_data.merge(
+        ref_dataset[["sample_id", "source", "project_name"]], on="sample_id"
+    )
+    sources_wer = merged_data.groupby("source")["wer"].mean().round(4).to_dict()
+    source_wer = {f"source_{k}": v for k, v in sources_wer.items()}
+    intron_project_wer = (
+        merged_data[merged_data["source"] == "intron"]
+        .groupby("project_name")["wer"]
+        .mean()
+        .round(4)
+        .to_dict()
+    )
+    intron_project_wer = {f"projects_{k}": v for k, v in intron_project_wer.items()}
+    breakdown_results.update(source_wer)
+    breakdown_results.update(intron_project_wer)
+
+    breakdown_results.update()
+    # breakdown to projects
+    # load logging csv
+    logging_path = "results/benchmark_breakdown.csv"
+    try:
+        logging_csv = pd.read_csv(logging_path)
+        logging_csv = logging_csv.append(breakdown_results, ignore_index=True)
+
+    except:
+        logging_csv = pd.DataFrame()
+        logging_csv = logging_csv.append(breakdown_results, ignore_index=True)
+    logging_csv.to_csv(logging_path, index=False)
+    print("results breakdown: ", breakdown_results)

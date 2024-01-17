@@ -6,6 +6,8 @@ import sys
 from datetime import datetime
 import pandas as pd
 import subprocess
+import whisper 
+import numpy as np
 
 os.environ['TRANSFORMERS_CACHE'] = '/data/.cache/'
 os.environ['XDG_CACHE_HOME'] = '/data3/.cache/'
@@ -34,7 +36,7 @@ logging.basicConfig(
 )
 logging_level = logging.DEBUG
 logger.setLevel(logging_level)
-
+data_home = "data"
 PROCESSOR = None
 CONFIG = None
 MAX_MODEL_AUDIO_LEN_SECS = 87
@@ -626,3 +628,99 @@ class DataCollatorCTCWithPaddingGroupLen:
             batch["attention_mask"] = batch["attention_mask"].to(torch.long)
 
         return batch
+
+
+
+
+class WhisperWav2VecDataset(torch.utils.data.Dataset):
+    """
+    A simple class to wrap AfriSpeech and trim/pad the audio to 30 seconds.
+    It will drop the last few seconds of a very small portion of the utterances.
+    """
+
+    def __init__(self, data_path, split="dev", device="cpu", model_id="whisper",
+                 max_audio_len_secs=17, audio_dir=f"./{data_home}/", gpu=-1, processor=None
+                 ):
+        self.dataset = load_afri_speech_data(
+            data_path=data_path,
+            max_audio_len_secs=max_audio_len_secs,
+            audio_dir=audio_dir,
+            split=split, gpu=gpu
+        )
+        self.device = device
+        self.model_id = model_id
+        self.processor =processor 
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, item):
+        audio_path = self.dataset[item]['audio_paths']
+        sample_id = self.dataset[item]["sample_id"]
+        text = self.dataset[item]['text']
+        accent = self.dataset[item]['accent']
+        domain = self.dataset[item]['domain']
+        vad = self.dataset[item].get('vad', 'speech')
+        
+
+
+        audio = load_audio_file(audio_path)
+        if 'whisper' in self.model_id:
+            input_features = self.processor(
+                audio,
+                sampling_rate=AudioConfig.sr,
+                return_tensors="pt",
+            )
+            audio = input_features.input_features.squeeze()
+        elif 'whisper' in self.model_id:
+            audio = whisper.pad_or_trim(torch.tensor(audio.flatten())).to(self.device)
+            audio = whisper.log_mel_spectrogram(audio)
+        else:
+            input_features = self.processor(
+                audio, sampling_rate=AudioConfig.sr, padding='max_length',
+                max_length=AudioConfig.sr * 17, truncation=True
+            )
+            audio = input_features.input_values[0]
+        return (audio, text, audio_path, accent, domain, vad, sample_id)
+
+
+class LibriSpeechDataset(torch.utils.data.Dataset):
+    def __init__(self, data_path, split="test", device="cpu", model_id="whisper",
+                 max_audio_len_secs=17, gpu=-1, processor=None
+                 ):
+        self.dataset = load_dataset("librispeech_asr", "clean", split=split)
+        self.device = device
+        self.model_id = model_id
+        self.processor=processor
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, item):
+        audio_path = self.dataset[item]['audio_paths']
+        sample_id = self.dataset[item]["sample_id"]
+        text = self.dataset[item]['text']
+        accent = self.dataset[item]['accent']
+        domain = self.dataset[item]['domain']
+        vad = self.dataset[item].get('vad', 'speech')
+        
+
+
+        audio = load_audio_file(audio_path)
+        if 'whisper' in self.model_id:
+            input_features = self.processor(
+                audio,
+                sampling_rate=AudioConfig.sr,
+                return_tensors="pt",
+            )
+            audio = input_features.input_features.squeeze()
+        elif 'whisper' in self.model_id:
+            audio = whisper.pad_or_trim(torch.tensor(audio.flatten())).to(self.device)
+            audio = whisper.log_mel_spectrogram(audio)
+        else:
+            input_features = self.processor(
+                audio, sampling_rate=AudioConfig.sr, padding='max_length',
+                max_length=AudioConfig.sr * 17, truncation=True
+            )
+            audio = input_features.input_values[0]
+        return (audio, text, audio_path, accent, domain, vad, sample_id)
