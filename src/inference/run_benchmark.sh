@@ -13,7 +13,7 @@ for ((i=0; i<${#csv_paths[@]}; i++)); do
     csv_path="${csv_paths[$i]}"
     audio_path="${audio_paths[$i]}"
     echo $csv_path 
-    python3 src/inference/intron_dataset_benchmark.py --audio_dir $audio_path --gpu 1 \
+    python3 src/inference/benchmark.py --audio_dir $audio_path --gpu 1 \
         --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  
 done
 echo benchmarking done
