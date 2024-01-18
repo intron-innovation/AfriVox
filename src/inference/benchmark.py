@@ -102,7 +102,7 @@ def main():
     print(device)
     tsince = int(round(time.time()))
     if ("nemo" in args.model_id_or_path) or ("nvidia" in args.model_id_or_path):
-        data = transcribe_nemo(args, model)
+        data, split = transcribe_nemo(args, model)
 
     else:
         if "whisper" in args.model_id_or_path:
