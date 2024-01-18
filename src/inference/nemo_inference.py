@@ -36,4 +36,4 @@ def transcribe_nemo(args, model):
         )
     )
 
-    return data
+    return data, split

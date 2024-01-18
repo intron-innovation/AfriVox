@@ -7,18 +7,13 @@ import torch
 import jiwer
 from whisper.normalizers import EnglishTextNormalizer
 import whisper
-from src.utils.prepare_dataset import load_afri_speech_data
+from src.utils.prepare_dataset import WhisperWav2VecDataset, LibriSpeechDataset, load_afri_speech_data
 from src.utils.text_processing import clean_text
 from src.utils.utils import parse_argument, write_pred_inference_df, breakdown_wer
 from src.inference.nemo_inference import transcribe_nemo
 from src.inference.wav2vec_inference import load_wav2vec_and_processor, transcribe_wav2vec
 from src.inference.whisper_inference import load_whisper_and_processor, transcribe_whisper
 
-from inference.whisper_inference import (
-    WhisperWav2VecDataset,
-    LibriSpeechDataset,
-    transcribe_whisper_wav2vec,
-)
 
 
 data_home = "data"
@@ -99,14 +94,13 @@ def post_process_preds(args, data, split):
 def main():
     args = parse_argument()
     os.makedirs(args.output_dir, exist_ok=True)
-    global processor
 
 
     device = torch.device(
         "cuda" if (torch.cuda.is_available() and args.gpu > -1) else "cpu"
     )
     print(device)
-
+    tsince = int(round(time.time()))
     if ("nemo" in args.model_id_or_path) or ("nvidia" in args.model_id_or_path):
         data = transcribe_nemo(args, model)
 
@@ -128,13 +122,9 @@ def main():
             data_loader, split = load_data(args, processor)
             data = transcribe_wav2vec(model, processor, data_loader)
         else: 
-            raise NotImplementedError
+            raise NotImplementedError("The selected model architecture is not supported, please select a valid one")
 
-        
-        
-        tsince = int(round(time.time()))
-
-        all_wer = post_process_preds(args, data, split)
+    all_wer = post_process_preds(args, data, split)
     
     # === if  split is 2m
     ref_dataset = pd.read_csv(args.data_csv_path)
