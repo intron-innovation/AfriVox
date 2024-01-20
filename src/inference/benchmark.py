@@ -114,7 +114,7 @@ def main():
             data = transcribe_whisper(model, processor, data_loader)
 
 
-        elif "facebook" in args.model_id_or_path:
+        elif any(keyword in args.model_id_or_path for keyword in ["facebook", "wav2vec", "mms"]):
             model, processor = load_wav2vec_and_processor(args)
             model = model.to(device)
             model.eval()

@@ -36,7 +36,7 @@ logging.basicConfig(
 )
 logging_level = logging.DEBUG
 logger.setLevel(logging_level)
-data_home = "data"
+data_home = "data3"
 PROCESSOR = None
 CONFIG = None
 MAX_MODEL_AUDIO_LEN_SECS = 87
@@ -69,7 +69,7 @@ def load_afri_speech_data(
     :param data_path: str
     :return: Dataset instance
     """
-    data = pd.read_csv(data_path)#.iloc[:50]
+    data = pd.read_csv(data_path).iloc[:50]
     
     print(f"start {split}: {data.shape}")
   
@@ -99,7 +99,7 @@ def load_afri_speech_data(
     data = data[~data.transcript.isna()]
     print(f"remove blank transcripts: {data.shape}")
     #data['duration'] =15
-    if max_audio_len_secs > -1 and gpu != -1:
+    if max_audio_len_secs > -1:  # and gpu != -1:
         # when gpu is available, it cannot fit long samples
         data = data[data.duration < max_audio_len_secs]
         print(f"remove long audios: {data.shape}")

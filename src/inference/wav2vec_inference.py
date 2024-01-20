@@ -27,9 +27,10 @@ device = torch.device(
     )
 print(device)
 
+
 def load_wav2vec_and_processor(args):
     processor = AutoProcessor.from_pretrained(args.model_id_or_path)
-    model = AutoModelForCTC.from_pretrained(args.model_id_or_path).to(device)
+    model = AutoModelForCTC.from_pretrained(args.model_id_or_path)
     
     return model, processor
     

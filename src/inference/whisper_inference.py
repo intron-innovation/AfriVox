@@ -21,6 +21,11 @@ os.environ['XDG_CACHE_HOME'] = f'/{data_home}/.cache/'
 device = torch.device(
         "cuda" if (torch.cuda.is_available()) else "cpu"
     )
+print(device)
+
+
+
+
 
 def load_whisper_and_processor(args):
     if "whisper" in args.model_id_or_path:
