@@ -14,17 +14,12 @@ from transformers import WhisperProcessor, WhisperForConditionalGeneration
 
 
 data_home = "data"
-os.environ['TRANSFORMERS_CACHE'] = f'/{data_home}/.cache/'
-os.environ['XDG_CACHE_HOME'] = f'/{data_home}/.cache/'
+os.environ["TRANSFORMERS_CACHE"] = f"/{data_home}/.cache/"
+os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 
 
-device = torch.device(
-        "cuda" if (torch.cuda.is_available()) else "cpu"
-    )
+device = torch.device("cuda" if (torch.cuda.is_available()) else "cpu")
 print(device)
-
-
-
 
 
 def load_whisper_and_processor(args):
@@ -36,9 +31,7 @@ def load_whisper_and_processor(args):
             processor = WhisperProcessor.from_pretrained(
                 os.path.dirname(args.model_id_or_path)
             )
-        model = WhisperForConditionalGeneration.from_pretrained(
-            args.model_id_or_path
-        )
+        model = WhisperForConditionalGeneration.from_pretrained(args.model_id_or_path)
     elif "whisper" in args.model_id_or_path:
         whisper_model = args.model_id_or_path.split("_")[1]
         model = whisper.load_model(whisper_model)
@@ -47,32 +40,31 @@ def load_whisper_and_processor(args):
             f"and has {sum(np.prod(p.shape) for p in model.parameters()):,} parameters."
         )
     return model, processor
-    
 
 
 def transcribe_whisper(model, processor, loader):
-    
+
     hypotheses = []
     references = []
     paths = []
     accents = []
     sample_ids = []
 
-    for audio_or_mels, texts, audio_path, accent, domain, vad, sample_id in tqdm(loader):
+    for audio_or_mels, texts, audio_path, accent, domain, vad, sample_id in tqdm(
+        loader
+    ):
 
         audio_or_mels = audio_or_mels.to(device, non_blocking=True)
         with torch.no_grad():
             pred_ids = model.generate(audio_or_mels)
         results = processor.batch_decode(pred_ids, skip_special_tokens=True)
 
-        
-
         hypotheses.extend(results)
         references.extend(texts)
         paths.extend(audio_path)
         accents.extend(accent)
         sample_ids.extend(sample_id)
-    
+
     data = pd.DataFrame(
         dict(
             hypothesis=hypotheses,
@@ -83,8 +75,3 @@ def transcribe_whisper(model, processor, loader):
         )
     )
     return data
-
-    
-
-
-

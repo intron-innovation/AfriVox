@@ -7,13 +7,22 @@ import torch
 import jiwer
 from whisper.normalizers import EnglishTextNormalizer
 import whisper
-from src.utils.prepare_dataset import WhisperWav2VecDataset, LibriSpeechDataset, load_afri_speech_data
+from src.utils.prepare_dataset import (
+    WhisperWav2VecDataset,
+    LibriSpeechDataset,
+    load_afri_speech_data,
+)
 from src.utils.text_processing import clean_text
 from src.utils.utils import parse_argument, write_pred_inference_df, breakdown_wer
 from src.inference.nemo_inference import transcribe_nemo
-from src.inference.wav2vec_inference import load_wav2vec_and_processor, transcribe_wav2vec
-from src.inference.whisper_inference import load_whisper_and_processor, transcribe_whisper
-
+from src.inference.wav2vec_inference import (
+    load_wav2vec_and_processor,
+    transcribe_wav2vec,
+)
+from src.inference.whisper_inference import (
+    load_whisper_and_processor,
+    transcribe_whisper,
+)
 
 
 data_home = "data"
@@ -26,7 +35,6 @@ torch.cuda.empty_cache()
 
 device = None
 tsince = 0
-
 
 
 def load_data(args, processor):
@@ -49,11 +57,12 @@ def load_data(args, processor):
             device=device,
             split=split,
             gpu=args.gpu,
-            model_id=args.model_id_or_path, 
-            processor=processor
+            model_id=args.model_id_or_path,
+            processor=processor,
         )
     data_loader = torch.utils.data.DataLoader(dataset, batch_size=args.batchsize)
     return data_loader, split
+
 
 def post_process_preds(args, data, split):
     pred_clean = [clean_text(text) for text in data["hypothesis"]]
@@ -86,15 +95,13 @@ def post_process_preds(args, data, split):
     data["hypothesis_clean"] = [normalizer(text) for text in data["hypothesis"]]
     data["reference_clean"] = [normalizer(text) for text in data["reference"]]
 
-    write_pred_inference_df(
-        args.model_id_or_path, data, all_wer, split=split
-    )
+    write_pred_inference_df(args.model_id_or_path, data, all_wer, split=split)
     return all_wer
+
 
 def main():
     args = parse_argument()
     os.makedirs(args.output_dir, exist_ok=True)
-
 
     device = torch.device(
         "cuda" if (torch.cuda.is_available() and args.gpu > -1) else "cpu"
@@ -109,23 +116,27 @@ def main():
             model, processor = load_whisper_and_processor(args)
             model = model.to(device)
             model.eval()
-            
+
             data_loader, split = load_data(args, processor)
             data = transcribe_whisper(model, processor, data_loader)
 
-
-        elif any(keyword in args.model_id_or_path for keyword in ["facebook", "wav2vec", "mms"]):
+        elif any(
+            keyword in args.model_id_or_path
+            for keyword in ["facebook", "wav2vec", "mms"]
+        ):
             model, processor = load_wav2vec_and_processor(args)
             model = model.to(device)
             model.eval()
-            
+
             data_loader, split = load_data(args, processor)
             data = transcribe_wav2vec(model, processor, data_loader)
-        else: 
-            raise NotImplementedError("The selected model architecture is not supported, please select a valid one")
+        else:
+            raise NotImplementedError(
+                "The selected model architecture is not supported, please select a valid one"
+            )
 
     all_wer = post_process_preds(args, data, split)
-    
+
     # === if  split is 2m
     ref_dataset = pd.read_csv(args.data_csv_path)
     if "source" in ref_dataset.columns:
@@ -136,9 +147,9 @@ def main():
         f"{args.model_id_or_path}-- Inference Time: {time_elapsed / 60:.4f}m | "
         f"{time_elapsed / len(data):.4f}s per sample"
     )
-    print("++++++=============================================+++++++++++++++++++++ \n Done with inference.")
-
-
+    print(
+        "++++++=============================================+++++++++++++++++++++ \n Done with inference."
+    )
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ from src.utils.prepare_dataset import load_afri_speech_data
 
 
 def transcribe_nemo(args, model):
-    
+
     split = args.data_csv_path.split("-")[1]
     dataset = load_afri_speech_data(
         data_path=args.data_csv_path,
@@ -17,13 +17,9 @@ def transcribe_nemo(args, model):
     )
     dataset = dataset[dataset["audio_paths"].apply(os.path.exists)]
     if "nemo" in args.model_id_or_path.split("."):
-        model = nemo_asr.models.EncDecCTCModelBPE.restore_from(
-            args.model_id_or_path
-        )
+        model = nemo_asr.models.EncDecCTCModelBPE.restore_from(args.model_id_or_path)
     else:
-        model = nemo_asr.models.EncDecCTCModelBPE.from_pretrained(
-            args.model_id_or_path
-        )
+        model = nemo_asr.models.EncDecCTCModelBPE.from_pretrained(args.model_id_or_path)
 
     transcription = model.transcribe(dataset["audio_paths"], batch_size=args.batchsize)
     data = pd.DataFrame(
