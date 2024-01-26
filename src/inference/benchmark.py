@@ -1,16 +1,13 @@
 import os
 import gc
 import time
-import numpy as np
 import pandas as pd
 import torch
 import jiwer
 from whisper.normalizers import EnglishTextNormalizer
-import whisper
 from src.utils.prepare_dataset import (
     WhisperWav2VecDataset,
     LibriSpeechDataset,
-    load_afri_speech_data,
 )
 from src.utils.text_processing import clean_text
 from src.utils.utils import parse_argument, write_pred_inference_df, breakdown_wer

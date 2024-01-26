@@ -30,6 +30,30 @@ def write_pred(model_id_or_path, results, wer, cols=None, output_dir="./results"
     return predictions_df
 
 
+def write_results(model_id_or_path, results, cols=None, output_dir="./results"):
+    """
+    Write model predictions to file
+    :param cols: List[str]
+    :param output_dir: str
+    :param model_id_or_path: str
+    :param results: List[[audio_path, prediction]]
+    :return: DataFrame
+    """
+    if "checkpoints" in model_id_or_path or os.path.isdir(model_id_or_path):
+        model_id_or_path = model_id_or_path.split("/")[3]
+    else:
+        model_id_or_path = model_id_or_path.replace("/", "-")
+    if cols is None:
+        cols = ["audio_path", "predictions"]
+    predictions_df = pd.DataFrame(results, col=cols)
+
+    output_path = f"{output_dir}/inference-results-{model_id_or_path}-{len(results)}.csv"
+    predictions_df.to_csv(output_path, index=False)
+    print(output_path)
+    return output_path
+
+
+
 def write_pred_inference_df(model_id_or_path, predictions_df, wer, output_dir="./results", split="dev"):
     """
     Write model predictions to file

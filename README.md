@@ -15,27 +15,35 @@ git clone https://github.com/intron-innovation/asr_benchmarking.git
 
 ## Step 2: Install Requirements
 
-First, ensure you install all necessary dependencies by running:
-
-```bash
-pip install -r requirements.txt
-```
-
-If you are using a single GPU machine, you may alternatively activate the pre-existing Conda environment named 'benchmark' that already contains all required packages:
+Check existing environments on your machine using `conda evn list` to avoid duplicating an existing environment.
+If the `benchmark` env exists, activate it using:
 
 ```bash
 conda activate benchmark
 ```
 
-## Step 3: Set Model Name/Path
-
-Before running the benchmark, you need to specify the model name or path in the script. Open `src/inference/run_benchmark.sh` and set the model variable:
+Otherwise, create a new environment and ensure you install all necessary dependencies by running:
 
 ```bash
-model=<model name/path>
+cd asr_benchmarking
+conda create -n benchmark python=3.10
+conda activate benchmark
+
+pip install -r requirements.txt
 ```
 
-Replace `<model name/path>` with the actual name or path to your model. After doing this, ensure to edit `audio_paths` in the configuration from `/data4` to reflect the correct mount point or directory where your dataset is located on your device.
+
+## Step 3: Set Model Name/Path
+
+Before running the benchmark, you need to specify the model name or path in the script. 
+Open `run_benchmark.sh` and set the model variable:
+
+```bash
+model=<model_name_or_path>
+```
+
+Replace `<model_name_or_path>` with the actual name or path to your model. 
+After doing this, ensure to edit `audio_paths` in the configuration from `/data4` to reflect the correct mount point or directory where your dataset is located on your device.
 
 ## Step 4: Run the Benchmark
 
