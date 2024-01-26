@@ -5,21 +5,14 @@
 
 import os
 
-import numpy as np
-import torch
-import time
-import pandas as pd
-import whisper
-from tqdm import tqdm
-from transformers import AutoProcessor, AutoModelForCTC, AutoModelForCTC
-from src.utils.audio_processing import load_audio_file, AudioConfig
-from src.utils.prepare_dataset import load_afri_speech_data
-from src.utils.text_processing import strip_task_tags, get_task_tags
-
 data_home = "data"
 os.environ["TRANSFORMERS_CACHE"] = f"/{data_home}/.cache/"
 os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 
+import torch
+import pandas as pd
+from tqdm import tqdm
+from transformers import AutoProcessor, AutoModelForCTC, AutoModelForCTC
 
 device = torch.device("cuda" if (torch.cuda.is_available()) else "cpu")
 print(device)

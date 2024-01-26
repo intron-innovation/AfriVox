@@ -196,12 +196,6 @@ def stream_audio(audio_path, wv_model, w2v_processor, context_length_secs=5, use
     return transcript
 
 
-def clean_text(text):
-    text = text.replace("inaudible. ", "").replace("inaudible", "")\
-        .replace(" ehm, ", " ").replace(" uh, "," ").replace(" er, "," ").replace("...", " ")
-    return text
-
-
 def predict_whisper(speech, model, processor, use_lm=False):
     input_features = processor(speech, sampling_rate=16000,
                                  return_tensors="pt").input_features

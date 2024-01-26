@@ -1,4 +1,7 @@
 import re
+import jiwer
+from whisper.normalizers import EnglishTextNormalizer
+
 
 clinical = ["General-Clinical", "Clinical-Surgery", "Talk-Very-Fast-Clinical", 
             "Pre-Clinical", "Clinical-Medicine", "Pre-Clinical-INT"]
@@ -25,10 +28,12 @@ def clean_text(text):
     :param text: str
     :return: str
     """
-    # remove multiple spaces
     if type(text) != str:
         print(text)
         return " "
+
+    # remove multiple spaces
+    text = clean_filler_words(text)
     text = re.sub(r"\s\s+", " ", text)
     # strip trailing spaces
     text = text.strip()
@@ -46,6 +51,12 @@ def clean_text(text):
         .strip()
     text = " ".join(text.split())
     text = re.sub(r"[^a-zA-Z0-9\s\.\,\-\?\:\'\/\(\)\[\]\+\%]", '', text)
+    return text
+
+
+def clean_filler_words(text):
+    text = text.replace("inaudible. ", "").replace("inaudible", "")\
+        .replace(" ehm, ", " ").replace(" uh, "," ").replace(" er, "," ").replace("...", " ")
     return text
 
 
@@ -180,5 +191,40 @@ def get_minority_accents(data, majority_count=5000):
     accent_counts = data.accent.value_counts().to_dict()
     print(accent_counts)
     return [accent for accent, count in accent_counts.items() if count < majority_count]
-    
-    
+
+
+def post_process_preds(data):
+    assert "hypothesis" in data.columns
+    assert "reference" in data.columns
+
+    pred_clean = [clean_text(text) for text in data["hypothesis"]]
+    ref_clean = [clean_text(text) for text in data["reference"]]
+
+    pred_clean = [text if text != "" else "abcxyz" for text in pred_clean]
+    ref_clean = [text if text != "" else "abcxyz" for text in ref_clean]
+
+    data["pred_clean"] = pred_clean
+    data["ref_clean"] = ref_clean
+
+    data["wer"] = data.apply(
+        lambda row: jiwer.wer(row["ref_clean"], row["pred_clean"]), axis=1
+    )
+
+    all_wer = jiwer.wer(list(data["ref_clean"]), list(data["pred_clean"]))
+    print(f"Cleanup WER: {all_wer * 100:.2f} %")
+
+    normalizer = EnglishTextNormalizer()
+
+    pred_normalized = [normalizer(text) for text in data["hypothesis"]]
+    gt_normalized = [normalizer(text) for text in data["reference"]]
+
+    pred_normalized = [text if text != "" else "abcxyz" for text in pred_normalized]
+    gt_normalized = [text if text != "" else "abcxyz" for text in gt_normalized]
+
+    whisper_wer = jiwer.wer(gt_normalized, pred_normalized)
+    print(f"EnglishTextNormalizer WER: {whisper_wer * 100:.2f} %")
+
+    data["hypothesis_clean"] = [normalizer(text) for text in data["hypothesis"]]
+    data["reference_clean"] = [normalizer(text) for text in data["reference"]]
+
+    return all_wer
