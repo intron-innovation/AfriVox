@@ -42,6 +42,8 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
 
 
 if __name__ == "__main__":
+    tsince = 0
+
     args = parse_argument()
 
     assert any(sub in args.model_id_or_path for sub in SUPPORTED_MODELS)
@@ -64,3 +66,12 @@ if __name__ == "__main__":
     results = infer_long_examples(dataset, args, model, processor)
     all_wer = post_process_preds(results)
     write_pred_inference_df(args.model_id_or_path, results, all_wer, split=split)
+
+    time_elapsed = int(round(time.time())) - tsince
+    print(
+        f"{args.model_id_or_path}-- Inference Time: {time_elapsed / 60:.4f}m | "
+        f"{time_elapsed / len(results):.4f}s per sample"
+    )
+    print(
+        "++++++=============================================+++++++++++++++++++++ \n Done with inference."
+    )
