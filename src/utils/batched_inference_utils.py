@@ -5,7 +5,7 @@ import time
 import torch
 
 from src.utils.audio_processing import load_audio_file, split_audio_full, get_byte_chunks, bytes_to_array
-
+from src.utils.text_processing import clean_text
 device = torch.device("cuda" if (torch.cuda.is_available()) else "cpu")
 lm = None
 LEFT = 'left'

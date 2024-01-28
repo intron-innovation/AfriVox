@@ -4,6 +4,9 @@ import nemo.collections.asr as nemo_asr
 
 from src.utils.prepare_dataset import load_afri_speech_data
 
+data_home = "data3"
+os.environ["TRANSFORMERS_CACHE"] = f"/{data_home}/.cache/"
+os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 
 def load_nemo_models(args):
     processor = None

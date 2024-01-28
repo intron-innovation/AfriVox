@@ -175,9 +175,33 @@ def breakdown_wer(args, ref_dataset, pred_data, all_wer):
 
 
 def get_split(text):
-    if "dev" in text:
+    if any(split in text for split in ["dev", "eval", "validation", "val"]):
         return "dev"
     elif "train" in text:
         return "train"
     else:
         return "test"
+    
+def correct_audio_paths(data, audio_dir, split):
+
+    if "audio_paths" in data.columns:
+        if split == 'aug':
+            data["audio_path"] = data["audio_path"].apply(
+                lambda x: x.replace(f"/AfriSpeech-100/train/", audio_dir)
+            )
+        else:
+            data["audio_path"] = data["audio_path"].apply(
+                lambda x: x.replace(f"/AfriSpeech-100/{split}/", audio_dir)
+            )
+            
+        data["audio_path"] = data["audio_path"].apply(
+                lambda x: x.replace(f"/AfriSpeech-100/{split}/", audio_dir)
+            )
+        # TODO: replace line 77 with this
+        # lambda x: x.replace(f"/AfriSpeech-100/{split}/", f"/{audio_dir}/{split}/")
+    else:
+        data["audio_path"] = data["audio_path"].apply(
+                lambda x: x.replace(f"/data/data/", audio_dir)
+            )
+        data['audio_ids'] = data.index.astype("string")
+    return data

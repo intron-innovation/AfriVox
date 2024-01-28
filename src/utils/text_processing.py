@@ -214,7 +214,6 @@ def post_process_preds(data):
     print(f"Cleanup WER: {all_wer * 100:.2f} %")
 
     normalizer = EnglishTextNormalizer()
-
     pred_normalized = [normalizer(text) for text in data["hypothesis"]]
     gt_normalized = [normalizer(text) for text in data["reference"]]
 

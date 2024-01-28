@@ -5,7 +5,7 @@
 
 import os
 
-data_home = "data"
+data_home = "data3"
 os.environ["TRANSFORMERS_CACHE"] = f"/{data_home}/.cache/"
 os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 
@@ -28,8 +28,7 @@ def load_whisper_and_processor(args):
         processor = WhisperProcessor.from_pretrained(
             os.path.dirname(args.model_id_or_path)
         )
-
-    if "whisper" in args.model_id_or_path and os.path.isdir(args.model_id_or_path):
+    if "whisper" in args.model_id_or_path:
         # load model and processor
         model = WhisperForConditionalGeneration.from_pretrained(args.model_id_or_path)
     elif "whisper" in args.model_id_or_path:
