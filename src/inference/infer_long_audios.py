@@ -28,6 +28,7 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
     results = []
     for i, example in dataset_.iterrows():
         fpath_wav = example.audio_path
+        #fpath_wav = "/data4/data/prod2/9d0bac98-9c46-48cf-b10c-3a40259ce4f7_364bc64f0828479b9e359d301b3da502.wav"
         start = time.time()
         if any(sub in args_.model_id_or_path for sub in WAV2VEC2_MODELS):
             result = stream_audio(fpath_wav, model_, processor_, context_length_secs=5, use_lm=False)
@@ -76,6 +77,7 @@ if __name__ == "__main__":
     assert "audio_path" in dataset.columns
     assert "text" in dataset.columns
     dataset = correct_audio_paths(dataset, args.audio_dir, split)
+    dataset = dataset[dataset['text'].str.split(" ").str.len() > 5]
 
     results = infer_long_examples(dataset, args, model, processor)
     all_wer = post_process_preds(results)

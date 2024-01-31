@@ -43,6 +43,7 @@ def w2v_predict(audio_path, w2v_model, w2v_processor):
                                    return_tensors="pt").input_values.to(device)
     with torch.no_grad():
         logits = w2v_model(input_features).logits
+
     return logits
 
 

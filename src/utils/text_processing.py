@@ -43,7 +43,8 @@ def clean_text(text):
     text = text.lower()
     text = text.replace(" comma,", ",") \
         .replace(" koma,", " ") \
-        .replace(" coma,", " ") \
+        .replace(" coma,", ",") \
+        .replace(" comma", " ") \
         .replace(" full stop.", ".") \
         .replace(" full stop", ".") \
         .replace(",.", ".") \
