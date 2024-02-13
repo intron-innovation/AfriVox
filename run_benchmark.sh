@@ -2,12 +2,14 @@
 
 
 
-models_list=("/data3/saved_models/models_frame_based_chunking/wav2vec-robust/checkpoint-4gpu-1692" \
-    "/data3/saved_models/lg_robust_500k_steps" \
-    "openai/whisper-large-v3"\
-    "distil-whisper/distil-large-v2" \
-    "nvidia/parakeet-ctc-0.6b"
-    "openai/whisper-medium")
+models_list=( "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_large_v3_afrispeech_lora_e3" \
+            #"/data3/saved_models/models_frame_based_chunking/wav2vec-robust/checkpoint-4gpu-1692" \
+            #"/data3/saved_models/lg_robust_500k_steps" \
+            #"openai/whisper-large-v3"\
+            #"distil-whisper/distil-large-v2" \
+            #"nvidia/parakeet-ctc-0.6b"
+            #"openai/whisper-medium"
+            )
 
 #model="/data3/saved_models/facebook_wav2vec_checkpoint-190575"
 
@@ -23,8 +25,8 @@ for model in ${models_list[@]};
         csv_path="${csv_paths[$i]}"
         audio_path="${audio_paths[$i]}"
         echo $csv_path $model 
-        python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 1 \
-            --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  
+        CUDA_VISIBLE_DEVICES=1 python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 1 \
+            --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  --lora True
     done
 done
 echo benchmarking done
