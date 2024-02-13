@@ -69,7 +69,7 @@ def load_afri_speech_data(
     :param data_path: str
     :return: Dataset instance
     """
-    data = pd.read_csv(data_path).iloc[:50]
+    data = pd.read_csv(data_path)
     
     print(f"start {split}: {data.shape}")
   

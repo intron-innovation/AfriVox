@@ -132,7 +132,11 @@ def parse_argument():
         default=None,
         help="frame work to use for whisper inference",
     )
-
+    parser.add_argument(
+    "--lora",
+    default=False,
+    help="whether to load lora model or not",
+    )
 
     return parser.parse_args()
 

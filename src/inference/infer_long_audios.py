@@ -59,7 +59,6 @@ if __name__ == "__main__":
     assert any(sub in args.model_id_or_path for sub in SUPPORTED_MODELS)
     split = get_split(args.data_csv_path)
     processor = None
-
     if "whisper" in args.model_id_or_path:
         model, processor = load_whisper_and_processor(args)
     elif any(sub in args.model_id_or_path for sub in WAV2VEC2_MODELS):
