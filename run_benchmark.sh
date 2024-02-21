@@ -2,7 +2,8 @@
 
 
 
-models_list=( "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_large_v3_afrispeech_lora_e3" \
+models_list=( "/data3/abraham/full_multitask/AfriSpeech-Dataset-Paper/src/experiments/distill_whisper__large_lora_afrispeech_e10/checkpoint-2561/"
+            # "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_large_v3_afrispeech_lora_e3" \
             #"/data3/saved_models/models_frame_based_chunking/wav2vec-robust/checkpoint-4gpu-1692" \
             #"/data3/saved_models/lg_robust_500k_steps" \
             #"openai/whisper-large-v3"\
