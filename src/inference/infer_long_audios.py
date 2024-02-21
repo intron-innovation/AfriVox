@@ -41,7 +41,7 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
         results.append([fpath_wav, example.text, result])
         if debug:
             print(f"{args_.model_id_or_path} decoding {fpath_wav} done in {time.time() - start:.4f}s")
-
+            
     results_ = pd.DataFrame(results, columns=['audio_path', 'reference', 'hypothesis'], dtype=float)
 
     return results_
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     else:
         raise NotImplementedError(f"model {args.model_id_or_path} or dataset {args.data_csv_path} not supported")
     model = model.to(device)
-    
+
     dataset = pd.read_csv(args.data_csv_path)
     if "audio_paths" in dataset.columns:
         dataset = dataset.rename(columns={"audio_paths":"audio_path"})
