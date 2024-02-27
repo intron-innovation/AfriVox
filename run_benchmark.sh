@@ -2,7 +2,11 @@
 
 
 
-models_list=("/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_e40/Model-en.nemo" \
+models_list=("openai/whisper-small" \ 
+            #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_medium_afrispeech_1e_lora/checkpoints" \
+            #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_1e_lora/checkpoints" \
+            #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_1e/checkpoints" \
+            # "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_e40/Model-en.nemo" \
             #"/data3/abraham/full_multitask/AfriSpeech-Dataset-Paper/src/experiments/distill_whisper__large_lora_afrispeech_e10/checkpoint-2561/" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_large_v3_afrispeech_test_lora_from_whisper_m" \
             #"/data3/saved_models/models_frame_based_chunking/wav2vec-robust/checkpoint-4gpu-1692" \
@@ -28,7 +32,7 @@ for model in ${models_list[@]};
         audio_path="${audio_paths[$i]}"
         echo $csv_path $model 
         CUDA_VISIBLE_DEVICES=1 python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 1 \
-            --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  --lora True
+            --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  --lora False
     done
 done
 echo benchmarking done
