@@ -21,12 +21,12 @@ print(device)
 
 
 def load_whisper_and_processor(args):
-    # try:
-    #     processor = WhisperProcessor.from_pretrained(args.model_id_or_path)
-    # except Exception as e:
-    #     processor = WhisperProcessor.from_pretrained(
-    #         os.path.dirname(args.model_id_or_path)
-    #     )
+    try:
+        processor = WhisperProcessor.from_pretrained(args.model_id_or_path)
+    except Exception as e:
+        processor = WhisperProcessor.from_pretrained(
+            os.path.dirname(args.model_id_or_path)
+        )
     if args.lora == "True" and "whisper" in args.model_id_or_path:
         peft_config = PeftConfig.from_pretrained(args.model_id_or_path)
         processor = WhisperProcessor.from_pretrained(args.model_id_or_path)
