@@ -165,7 +165,6 @@ def stream_audio(audio_path, wv_model, w2v_processor, context_length_secs=5, use
     l_stride = r_stride = None
     stride = (l_stride, r_stride)
     transcript = ""
-
     with tqdm(total=len(audio_q)) as pbar:
         # start sliding window
         while offset < len(audio_q):
@@ -194,7 +193,7 @@ def stream_audio(audio_path, wv_model, w2v_processor, context_length_secs=5, use
             l_stride = r_stride = True
             stride = (l_stride, r_stride)
 
-    return transcript
+    return transcript, accumulated_logits
 
 
 def predict_whisper(speech, model, processor, use_lm=False):
