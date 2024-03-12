@@ -193,7 +193,7 @@ def stream_audio(audio_path, wv_model, w2v_processor, context_length_secs=5, use
             l_stride = r_stride = True
             stride = (l_stride, r_stride)
 
-    return transcript, accumulated_logits
+    return transcript
 
 
 def predict_whisper(speech, model, processor, use_lm=False):
