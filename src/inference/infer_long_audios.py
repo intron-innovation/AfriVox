@@ -5,13 +5,16 @@ import gc
 import os
 
 
-from src.inference.nemo_inference import load_nemo_models
+#from src.inference.nemo_inference import load_nemo_models
 from src.inference.wav2vec_inference import load_wav2vec_and_processor
 from src.inference.whisper_inference import load_whisper_and_processor
 from src.utils.batched_inference_utils import stream_audio, batched_whisper_inference
 from src.utils.text_processing import post_process_preds
 from src.utils.utils import parse_argument, write_pred_inference_df, get_split, correct_audio_paths
 
+
+def load_nemo_models():
+    pass
 WAV2VEC2_MODELS = ['mms', 'wav2vec', 'w2v', 'robust']
 NEMO_MODELS = ['nemo', 'nvidia']
 SUPPORTED_MODELS = WAV2VEC2_MODELS + ['whisper'] + NEMO_MODELS
@@ -20,7 +23,7 @@ gc.collect()
 torch.cuda.empty_cache()
 
 
-data_home = "data3"
+data_home = "data4"
 os.environ["TRANSFORMERS_CACHE"] = f"/{data_home}/.cache/"
 os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 
@@ -33,6 +36,8 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
             result = stream_audio(fpath_wav, model_, processor_, context_length_secs=5, use_lm=False)
         elif any(sub in args_.model_id_or_path for sub in NEMO_MODELS):
             result = model.transcribe([fpath_wav])[0]
+            if type(result) == list:
+                result = result[0]
         elif "whisper" in args_.model_id_or_path:
             result = batched_whisper_inference(fpath_wav, model_, processor_, max_len_secs=20)
         else:
@@ -40,8 +45,7 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
         results.append([fpath_wav, example.text, result])
         if debug:
             print(f"{args_.model_id_or_path} decoding {fpath_wav} done in {time.time() - start:.4f}s")
-            
-    results_ = pd.DataFrame(results, columns=['audio_path', 'reference', 'hypothesis'], dtype=float)
+    results_ = pd.DataFrame(results, columns=['audio_path', 'reference', 'hypothesis'])
 
     return results_
 
@@ -75,8 +79,6 @@ if __name__ == "__main__":
     assert "audio_path" in dataset.columns
     assert "text" in dataset.columns
     dataset = correct_audio_paths(dataset, args.audio_dir, split)
-    dataset = dataset[dataset['text'].str.split(" ").str.len() > 5]
-
     results = infer_long_examples(dataset, args, model, processor)
     all_wer = post_process_preds(results)
     write_pred_inference_df(args.model_id_or_path, results, all_wer, split=split)

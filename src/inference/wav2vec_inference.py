@@ -5,7 +5,7 @@
 
 import os
 
-data_home = "data3"
+data_home = "data4"
 os.environ["TRANSFORMERS_CACHE"] = f"/{data_home}/.cache/"
 os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 

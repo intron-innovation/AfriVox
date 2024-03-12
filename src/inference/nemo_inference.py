@@ -13,8 +13,8 @@ rnnt = ['rnnt']
 mtl = ['canary']
 
 model_mapping = {
-    'ctc': nemo_asr.models.EncDecCTCModelBPE,
-    'rnnt': nemo_asr.models.EncDecRNNTBPEModel,
+    'ctc': None #nemo_asr.models.EncDecCTCModelBPE,
+    'rnnt':  None #nemo_asr.models.EncDecRNNTBPEModel,
     'mtl': None #nemo_asr.models.EncDecMultiTaskModel,
 }
 
@@ -40,9 +40,9 @@ def load_nemo_models(args):
     model_type = get_model_type(args.model_id_or_path)  # Assuming you have a command-line argument or some way to specify the model type
 
     if "nemo" in args.model_id_or_path.split("."):
-        model = model_mapping[model_type].restore_from(args.model_id_or_path)
+        model = model_type.restore_from(args.model_id_or_path)
     else:
-        model = model_mapping[model_type].from_pretrained(args.model_id_or_path)
+        model = model_type.from_pretrained(args.model_id_or_path)
     return model, processor
 
 
