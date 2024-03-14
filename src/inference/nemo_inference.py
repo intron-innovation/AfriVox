@@ -13,8 +13,8 @@ rnnt = ['rnnt']
 mtl = ['canary']
 
 model_mapping = {
-    'ctc': None #nemo_asr.models.EncDecCTCModelBPE,
-    'rnnt':  None #nemo_asr.models.EncDecRNNTBPEModel,
+    'ctc': nemo_asr.models.EncDecCTCModelBPE,
+    'rnnt':  nemo_asr.models.EncDecRNNTBPEModel,
     'mtl': None #nemo_asr.models.EncDecMultiTaskModel,
 }
 

@@ -5,3 +5,5 @@ src/utils/__pycache__/
 *__pycache__*
 notebooks/.ipynb_checkpoints*
 temp.wav
+results/*70000.csv
+results/*69569.csv

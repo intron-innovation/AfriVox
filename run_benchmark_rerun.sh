@@ -2,7 +2,7 @@
 
 
 
-models_list=("facebook/wav2vec2-large-robust-ft-libri-960h" \
+models_list=("/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_100e/ctc_oModel-en.nemo" \
             #"openai/whisper-large-v2" \ 
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_10e_lora/checkpoints" \ 
             # "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_10e/checkpoints"  \
@@ -40,7 +40,7 @@ for model in ${models_list[@]};
         csv_path="${csv_paths[$i]}"
         audio_path="${audio_paths[$i]}"
         echo $csv_path $model 
-        CUDA_VISIBLE_DEVICES=2 python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 1 \
+        CUDA_VISIBLE_DEVICES=3 python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 1 \
             --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  --lora False
     done
 done

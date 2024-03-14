@@ -5,7 +5,7 @@ import gc
 import os
 
 
-#from src.inference.nemo_inference import load_nemo_models
+from src.inference.nemo_inference import load_nemo_models
 from src.inference.wav2vec_inference import load_wav2vec_and_processor
 from src.inference.whisper_inference import load_whisper_and_processor
 from src.utils.batched_inference_utils import stream_audio, batched_whisper_inference
@@ -13,8 +13,8 @@ from src.utils.text_processing import post_process_preds
 from src.utils.utils import parse_argument, write_pred_inference_df, get_split, correct_audio_paths
 
 
-def load_nemo_models():
-    pass
+# def load_nemo_models():
+#     pass
 WAV2VEC2_MODELS = ['mms', 'wav2vec', 'w2v', 'robust']
 NEMO_MODELS = ['nemo', 'nvidia']
 SUPPORTED_MODELS = WAV2VEC2_MODELS + ['whisper'] + NEMO_MODELS
