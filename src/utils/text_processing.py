@@ -228,3 +228,4 @@ def post_process_preds(data):
     data["reference_clean"] = [normalizer(text) for text in data["reference"]]
 
     return all_wer
+

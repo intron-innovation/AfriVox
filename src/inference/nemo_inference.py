@@ -1,13 +1,15 @@
 import os
-import pandas as pd
-import nemo.collections.asr as nemo_asr
-from src.utils.prepare_dataset import load_afri_speech_data
-
-data_home = "data3"
-os.environ["TRANSFORMERS_CACHE"] = f"/{data_home}/.cache/"
+data_home = "data4"
+os.environ["HF_HOME"] = f"/{data_home}/.cache/"
 os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 
+import pandas as pd
+from tqdm import tqdm
+import nemo.collections.asr as nemo_asr
+from src.utils.prepare_dataset import load_afri_speech_data
+from nemo_text_processing.inverse_text_normalization.inverse_normalize import InverseNormalizer
 
+tqdm.pandas()
 ctc = ['conformer', 'ctc']
 rnnt = ['rnnt']
 mtl = ['canary']
@@ -15,9 +17,14 @@ mtl = ['canary']
 model_mapping = {
     'ctc': nemo_asr.models.EncDecCTCModelBPE,
     'rnnt':  nemo_asr.models.EncDecRNNTBPEModel,
-    'mtl': None #nemo_asr.models.EncDecMultiTaskModel,
+    'mtl': nemo_asr.models.EncDecMultiTaskModel,
 }
+inverse_normalizer = InverseNormalizer(lang='en')
 
+
+def normalize_pred(text):
+    text  = inverse_normalizer.inverse_normalize(text, verbose=False)
+    return text
 
 def get_model_type(model_id_or_path):
     if  any(item in model_id_or_path for item in ctc):
@@ -57,7 +64,6 @@ def transcribe_nemo(args, model):
         return_dataset=False,
         gpu=args.gpu,
     )
-    dataset = dataset[dataset["audio_paths"].apply(os.path.exists)]
 
     transcription = model.transcribe(dataset["audio_paths"], batch_size=args.batchsize)
     data = pd.DataFrame(
@@ -69,5 +75,6 @@ def transcribe_nemo(args, model):
             sample_id=dataset["sample_id"].tolist(),
         )
     )
+    data['hypothesis'] = data['hypothesis'].progress_apply(normalize_pred, desc="apply invers normalizer")
 
     return data, split

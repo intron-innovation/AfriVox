@@ -3,8 +3,6 @@ import pandas as pd
 import torch
 import gc
 import os
-
-
 from src.inference.nemo_inference import load_nemo_models
 from src.inference.wav2vec_inference import load_wav2vec_and_processor
 from src.inference.whisper_inference import load_whisper_and_processor
@@ -22,11 +20,6 @@ SUPPORTED_MODELS = WAV2VEC2_MODELS + ['whisper'] + NEMO_MODELS
 gc.collect()
 torch.cuda.empty_cache()
 
-
-data_home = "data4"
-os.environ["TRANSFORMERS_CACHE"] = f"/{data_home}/.cache/"
-os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
-
 def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
     results = []
     for i, example in dataset_.iterrows():
@@ -35,7 +28,7 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
         if any(sub in args_.model_id_or_path for sub in WAV2VEC2_MODELS):
             result = stream_audio(fpath_wav, model_, processor_, context_length_secs=5, use_lm=False)
         elif any(sub in args_.model_id_or_path for sub in NEMO_MODELS):
-            result = model.transcribe([fpath_wav])[0]
+            result = model_.transcribe([fpath_wav])[0]
             if type(result) == list:
                 result = result[0]
         elif "whisper" in args_.model_id_or_path:
@@ -61,6 +54,7 @@ if __name__ == "__main__":
 
     assert any(sub in args.model_id_or_path for sub in SUPPORTED_MODELS)
     split = get_split(args.data_csv_path)
+    source = args.audio_dir.split("/")[-2]
     processor = None
     if "whisper" in args.model_id_or_path:
         model, processor = load_whisper_and_processor(args)
@@ -75,13 +69,16 @@ if __name__ == "__main__":
     dataset = pd.read_csv(args.data_csv_path)
     if "audio_paths" in dataset.columns:
         dataset = dataset.rename(columns={"audio_paths":"audio_path"})
+
     
     assert "audio_path" in dataset.columns
     assert "text" in dataset.columns
     dataset = correct_audio_paths(dataset, args.audio_dir, split)
+    dataset = dataset[dataset["audio_path"].apply(os.path.exists)]
+
     results = infer_long_examples(dataset, args, model, processor)
     all_wer = post_process_preds(results)
-    write_pred_inference_df(args.model_id_or_path, results, all_wer, split=split)
+    write_pred_inference_df(args.model_id_or_path, results, all_wer, split=split, source=source)
 
     time_elapsed = int(round(time.time())) - tsince
     print(

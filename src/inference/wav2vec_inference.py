@@ -1,12 +1,6 @@
-###### Code adapted from  ######
-# https://colab.research.google.com/github/openai/whisper/blob/master/notebooks/LibriSpeech.ipynb#scrollTo=-YcRU5jqNqo2
-# https://github.com/openai/whisper
-################################
-
 import os
-
 data_home = "data4"
-os.environ["TRANSFORMERS_CACHE"] = f"/{data_home}/.cache/"
+os.environ["HF_HOME"] = f"/{data_home}/.cache/"
 os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 
 import torch

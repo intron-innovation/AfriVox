@@ -1,5 +1,7 @@
-import logging
 import os
+os.environ['HF_HOME'] = '/data4/.cache/'
+os.environ['XDG_CACHE_HOME'] = '/data4/.cache/'
+import logging
 import time
 import json
 import sys
@@ -9,8 +11,6 @@ import subprocess
 import whisper 
 import numpy as np
 
-os.environ['TRANSFORMERS_CACHE'] = '/data/.cache/'
-os.environ['XDG_CACHE_HOME'] = '/data3/.cache/'
 
 from datasets import load_dataset, load_metric, Dataset
 from dataclasses import dataclass

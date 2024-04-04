@@ -30,7 +30,7 @@ def write_pred(model_id_or_path, results, wer, cols=None, output_dir="./results"
     return predictions_df
 
 
-def write_pred_inference_df(model_id_or_path, predictions_df, wer, output_dir="./results", split="dev"):
+def write_pred_inference_df(model_id_or_path, predictions_df, wer, output_dir="./results", split="dev", source="normal"):
     """
     Write model predictions to file
     :param cols: List[str]
@@ -42,12 +42,10 @@ def write_pred_inference_df(model_id_or_path, predictions_df, wer, output_dir=".
     """
     if "checkpoints" in model_id_or_path and '/data/AfriSpeech-Dataset-Paper' in model_id_or_path:
         model_id_or_path = model_id_or_path.split("/")[-1]
-    elif "checkpoints" in model_id_or_path or os.path.isdir(model_id_or_path):
-        model_id_or_path = model_id_or_path.split("/")[3]
     else:
-        model_id_or_path = model_id_or_path.replace("/", "-")
-
-    output_path = f"{output_dir}/intron-open-{split}-{model_id_or_path}-wer-{round(wer, 4)}-{len(predictions_df)}.csv"
+        model_id_or_path = model_id_or_path.replace("/", "-").split("AfriSpeech-Dataset-Paper-src-experiments")[-1]
+    
+    output_path = f"{output_dir}/intron-open-{split}-{model_id_or_path}-{source}-wer-{round(wer, 4)}-{len(predictions_df)}.csv"
     predictions_df.to_csv(output_path, index=False)
     print(output_path)
     return predictions_df, output_path
@@ -205,7 +203,7 @@ def correct_audio_paths(data, audio_dir, split):
         # lambda x: x.replace(f"/AfriSpeech-100/{split}/", f"/{audio_dir}/{split}/")
     else:
         data["audio_path"] = data["audio_path"].apply(
-                lambda x: x.replace(f"/data/data/", audio_dir)
+                lambda x: x.replace(f"/data4/data/prod2/", audio_dir)
             )
         data['audio_ids'] = data.index.astype("string")
     return data

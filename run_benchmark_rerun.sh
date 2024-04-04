@@ -2,30 +2,30 @@
 
 
 
-models_list=("/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_100e_rerun_ctc/Model-en.nemo" \
+models_list=( # "openai/whisper-large-v3" \
+            #"distil-whisper/distil-large-v3" \
+            # "distil-whisper/distil-large-v2" \
+            "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_100e_rerun_ctc/Model-en.nemo" \
             "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_100e/ctc_Model-en.nemo" \  
-            "openai/whisper-large-v2" \ 
-            "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_10e_lora/checkpoints" \ 
-            "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_10e/checkpoints"  \
+            # "openai/whisper-large-v2" \ 
+            # "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_10e_lora/checkpoints" \ 
+            # "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_10e/checkpoints"  \
             "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_ctc_afrispeech_benchmark_e40/Model-en.nemo" \
             "nvidia/parakeet-rnnt-1.1b" \
-            # "nvidia/canary-1b" \
-            "openai/whisper-small" \ 
-            "/data4/saved_models/w2v_robust_200k_prod" \
-            "/data4/saved_models/lg_robust_500k_steps" \
-            "openai/whisper-large-v3" \
-            "distil-whisper/distil-large-v3" \
-            "distil-whisper/distil-large-v2" \
+            "nvidia/canary-1b" \
+            # "openai/whisper-small" \ 
+            # "/data4/saved_models/w2v_robust_200k_prod" \
+            # "/data4/saved_models/lg_robust_500k_steps" \
             "nvidia/parakeet-ctc-0.6b" \
-            "openai/whisper-medium" \
-            "facebook/wav2vec2-large-robust-ft-libri-960h" \
+            # "openai/whisper-medium" \
+            # "facebook/wav2vec2-large-robust-ft-libri-960h" \
             )
 
 
 
 export PYTHONPATH=.
 csv_path="data/intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28.538356_with_labels_local_correct_transcript.csv" 
-audio_paths=("/data4/data/prod/volume_norm/") #  "/data4/data/prod/denoised" "/data4/data/prod/vad" "/data4/data/prod/volume_norm") 
+audio_paths=("/data4/data/prod/vad/") #  "/data4/data/prod/denoised" "/data4/data/prod/vad" "/data4/data/prod/volume_norm") 
 
 
 for model in ${models_list[@]}; 
