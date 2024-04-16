@@ -1,5 +1,5 @@
 import os
-data_home = "data4"
+data_home = "data3"
 os.environ["HF_HOME"] = f"/{data_home}/.cache/"
 os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 
@@ -17,7 +17,7 @@ mtl = ['canary']
 model_mapping = {
     'ctc': nemo_asr.models.EncDecCTCModelBPE,
     'rnnt':  nemo_asr.models.EncDecRNNTBPEModel,
-    'mtl': nemo_asr.models.EncDecMultiTaskModel,
+    'mtl': None # nemo_asr.models.EncDecMultiTaskModel,
 }
 inverse_normalizer = InverseNormalizer(lang='en')
 

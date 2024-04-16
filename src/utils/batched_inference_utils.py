@@ -20,7 +20,6 @@ def w2v_pipeline(audio_path=None, w2v_model=None, w2v_processor=None, speech=Non
         speech = load_audio_file(audio_path)
     elif isinstance(speech, dict):
         speech = speech['speech']
-
     input_features = w2v_processor(speech, sampling_rate=SAMPLING_RATE, padding=True,
                                    return_tensors="pt").input_values.to(device)
     with torch.no_grad():
@@ -199,7 +198,7 @@ def stream_audio(audio_path, wv_model, w2v_processor, context_length_secs=5, use
 def predict_whisper(speech, model, processor, use_lm=False):
     input_features = processor(speech, sampling_rate=16000,
                                  return_tensors="pt").input_features
-    input_features = input_features.to(device)#.half()
+    input_features = input_features.to(device).half()
 
     with torch.no_grad():
         pred_ids = model.generate(input_features)
