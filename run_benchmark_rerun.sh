@@ -2,7 +2,8 @@
 
 
 
-models_list=("/data3/saved_models/whisper_medium_afrispeech_20e_lora" \
+models_list=("/data3/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_100e_rerun_ctc_vocab/Model-en.nemo" \
+            #"/data3/saved_models/whisper_medium_afrispeech_20e_lora" \
             #"openai/whisper-large-v3" \
             #"distil-whisper/distil-large-v3" \
             # "distil-whisper/distil-large-v2" \
@@ -26,7 +27,7 @@ models_list=("/data3/saved_models/whisper_medium_afrispeech_20e_lora" \
 
 export PYTHONPATH=.
 csv_path="data/intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28.538356_with_labels_local_correct_transcript.csv" 
-audio_paths=("/data/data/prod2/") #  "/data4/data/prod/denoised" "/data4/data/prod/vad" "/data4/data/prod/volume_norm") 
+audio_paths=("/data3/data/prod2/") #  "/data4/data/prod/denoised" "/data4/data/prod/vad" "/data4/data/prod/volume_norm") 
 
 
 for model in ${models_list[@]}; 

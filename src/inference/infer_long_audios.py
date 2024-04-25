@@ -31,6 +31,11 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
             result = model_.transcribe([fpath_wav])[0]
             if type(result) == list:
                 result = result[0]
+            try:
+                if result[-1] == "0":
+                    result = result.rstrip("0") + "."
+            except:
+                pass
         elif "whisper" in args_.model_id_or_path:
             result = batched_whisper_inference(fpath_wav, model_, processor_, max_len_secs=20)
         else:
