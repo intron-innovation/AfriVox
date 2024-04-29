@@ -40,6 +40,26 @@ def get_model_type(model_id_or_path):
         raise NotImplementedError("The model name you have chosen is not supported. Please select a supported model name or adjust the script configurations.")
 
 
+class IntronNemo:
+   
+    def __init__(self, model_path: str, map_location: str ="cpu", model_type = EncDecCTCModelBPE):
+        self.model  = model_type.restore_from(model_path, map_location=map_location)  
+        self.model_dir = os.path.dirname(model_path)
+        self.new_tokenizer = spm.SentencePieceProcessor()
+        self.new_tokenizer.load(self.model_dir + "/tokenizer.model" )
+        self.new_vocabs = [self.new_tokenizer.id_to_piece(id) for id in range(self.new_tokenizer.get_piece_size())]
+        self.decoder = build_ctcdecoder(self.new_vocabs)
+        
+    def transcribe(self, paths2audio_files: List[str], **kwargs):
+        logits = self.model.transcribe(paths2audio_files=paths2audio_files, logprobs=True,  **kwargs)
+        predictions = []
+        for item in logits:
+            prediction = self.decoder.decode(item)
+            predictions.append(prediction)
+        return predictions
+
+
+
 
 def load_nemo_models(args):
 
@@ -47,7 +67,8 @@ def load_nemo_models(args):
     model_type = get_model_type(args.model_id_or_path)  # Assuming you have a command-line argument or some way to specify the model type
 
     if "nemo" in args.model_id_or_path.split("."):
-        model = model_type.restore_from(args.model_id_or_path)
+
+        model = IntronNemo(args.model_id_or_path, model_type=model_type)
     else:
         model = model_type.from_pretrained(args.model_id_or_path)
     return model, processor
