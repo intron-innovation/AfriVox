@@ -43,6 +43,11 @@ def get_model_type(model_id_or_path):
 class IntronNemo:
    
     def __init__(self, model_path: str, map_location: str ="cpu", model_type = EncDecCTCModelBPE):
+
+        """
+        Note that model_path must contain a tarred model file with the '.nemo' extension and 
+        a tokeniser file with the '.model' extension.
+        """
         self.model  = model_type.restore_from(model_path, map_location=map_location)  
         self.model_dir = os.path.dirname(model_path)
         self.new_tokenizer = spm.SentencePieceProcessor()
