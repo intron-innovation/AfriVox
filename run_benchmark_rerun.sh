@@ -2,10 +2,9 @@
 
 
 
-models_list=(
-            # "/data4/saved_models/whisper_small_afrispeech_10e_lora" \
+models_list=("/data3/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_100e_rerun_ctc_vocab/Model-en.nemo" \
             #"/data3/saved_models/whisper_medium_afrispeech_20e_lora" \
-            "openai/whisper-large-v3" \
+            #"openai/whisper-large-v3" \
             #"distil-whisper/distil-large-v3" \
             # "distil-whisper/distil-large-v2" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_100e_rerun_ctc/Model-en.nemo" \
