@@ -11,8 +11,6 @@ from src.utils.text_processing import post_process_preds
 from src.utils.utils import parse_argument, write_pred_inference_df, get_split, correct_audio_paths
 
 
-# def load_nemo_models():
-#     pass
 WAV2VEC2_MODELS = ['mms', 'wav2vec', 'w2v', 'robust']
 NEMO_MODELS = ['nemo', 'nvidia', 'parakeet']
 SUPPORTED_MODELS = WAV2VEC2_MODELS + ['whisper'] + NEMO_MODELS
@@ -31,11 +29,6 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
             result = model_.transcribe([fpath_wav])[0]
             if type(result) == list:
                 result = result[0]
-            try:
-                if result[-1] == "0":
-                    result = result.rstrip("0") + "."
-            except:
-                pass
         elif "whisper" in args_.model_id_or_path:
             result = batched_whisper_inference(fpath_wav, model_, processor_, max_len_secs=20)
         else:

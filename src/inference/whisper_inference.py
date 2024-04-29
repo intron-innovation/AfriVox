@@ -1,5 +1,5 @@
 import os
-data_home = "data3"
+data_home = "data4"
 os.environ["HF_HOME"] = f"/{data_home}/.cache/"
 os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 import torch
@@ -39,6 +39,12 @@ def load_whisper_and_processor(args):
     elif "whisper" in args.model_id_or_path:
         # load model and processor
         model = WhisperForConditionalGeneration.from_pretrained(args.model_id_or_path)
+        model.config.use_cache = True
+        model.generation_config.suppress_tokens = []
+        model.generation_config.language = "en"
+        model.config.forced_decoder_ids = processor.tokenizer.get_decoder_prompt_ids(
+        language='en', task='transcribe'
+        )
     elif "whisper" in args.model_id_or_path:
         whisper_model = args.model_id_or_path.split("_")[1]
         model = whisper.load_model(whisper_model)

@@ -11,7 +11,6 @@ models_list=("/data3/saved_models/parakeet_afrispeech_benchmark_100e_rerun_ctc_v
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_100e_rerun_ctc/Model-en.nemo" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_afrispeech_benchmark_100e/ctc_Model-en.nemo" \  
             # "openai/whisper-large-v2" \ 
-            # "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_10e_lora/checkpoints" \ 
             # "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_10e/checkpoints"  \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_ctc_afrispeech_benchmark_e40/Model-en.nemo" \
             #"nvidia/parakeet-rnnt-1.1b" \
@@ -28,7 +27,7 @@ models_list=("/data3/saved_models/parakeet_afrispeech_benchmark_100e_rerun_ctc_v
 
 export PYTHONPATH=.
 csv_path="data/intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28.538356_with_labels_local_correct_transcript.csv" 
-audio_paths=("/data3/data/prod2/") #  "/data4/data/prod/denoised" "/data4/data/prod/vad" "/data4/data/prod/volume_norm") 
+audio_paths=("/data4/data/prod2/") #  "/data4/data/prod/denoised" "/data4/data/prod/vad" "/data4/data/prod/volume_norm") 
 
 
 for model in ${models_list[@]}; 
@@ -37,7 +36,7 @@ for model in ${models_list[@]};
         do
         echo $csv_path $model 
         CUDA_VISIBLE_DEVICES=0 python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 1 \
-            --model_id_or_path $model --data_csv_path $csv_path --batchsize 16  --lora True
+            --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  --lora False
     done
 done
 echo benchmarking done
