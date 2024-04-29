@@ -14,7 +14,7 @@ from src.utils.utils import parse_argument, write_pred_inference_df, get_split, 
 # def load_nemo_models():
 #     pass
 WAV2VEC2_MODELS = ['mms', 'wav2vec', 'w2v', 'robust']
-NEMO_MODELS = ['nemo', 'nvidia']
+NEMO_MODELS = ['nemo', 'nvidia', 'parakeet']
 SUPPORTED_MODELS = WAV2VEC2_MODELS + ['whisper'] + NEMO_MODELS
 
 gc.collect()

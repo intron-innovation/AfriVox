@@ -46,14 +46,14 @@ def load_nemo_models(args):
     processor = None
     model_type = get_model_type(args.model_id_or_path)  # Assuming you have a command-line argument or some way to specify the model type
 
-    if "nemo" in args.model_id_or_path.split("."):
+    if os.path.isdir(args.model_id_or_path):
         model = model_type.restore_from(args.model_id_or_path)
     else:
         model = model_type.from_pretrained(args.model_id_or_path)
     return model, processor
 
 
-def transcribe_nemo(args, model):
+def transcribe_nemo(args, model)
 
     split = args.data_csv_path.split("-")[1]
     dataset = load_afri_speech_data(
