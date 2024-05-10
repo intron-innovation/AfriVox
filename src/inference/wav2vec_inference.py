@@ -6,7 +6,8 @@ os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 import torch
 import pandas as pd
 from tqdm import tqdm
-from transformers import AutoProcessor, AutoModelForCTC, AutoModelForCTC
+from pyctcdecode import build_ctcdecoder
+from transformers import AutoProcessor, AutoModelForCTC, AutoModelForCTC, Wav2Vec2ProcessorWithLM
 
 device = torch.device("cuda" if (torch.cuda.is_available()) else "cpu")
 print(device)
@@ -14,6 +15,18 @@ print(device)
 
 def load_wav2vec_and_processor(args):
     processor = AutoProcessor.from_pretrained(args.model_id_or_path)
+    if args.use_lm == "True":
+        vocab_dict = processor.tokenizer.get_vocab()
+        sorted_vocab_dict = {k.lower(): v for k, v in sorted(vocab_dict.items(), key=lambda item: item[1])}
+        decoder = build_ctcdecoder(
+        labels=list(sorted_vocab_dict.keys()),
+        kenlm_model_path=args.lm_path,
+        )
+        processor = Wav2Vec2ProcessorWithLM(
+        feature_extractor=processor.feature_extractor,
+        tokenizer=processor.tokenizer,
+        decoder=decoder
+    )
     model = AutoModelForCTC.from_pretrained(args.model_id_or_path)
 
     return model, processor

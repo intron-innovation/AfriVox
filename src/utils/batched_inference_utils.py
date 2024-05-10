@@ -7,6 +7,7 @@ import torch
 from src.utils.audio_processing import load_audio_file, split_audio_full, get_byte_chunks, bytes_to_array
 from src.utils.text_processing import clean_text
 device = torch.device("cuda" if (torch.cuda.is_available()) else "cpu")
+from transformers import AutoProcessor, Wav2Vec2ProcessorWithLM
 lm = None
 LEFT = 'left'
 RIGHT = 'right'
@@ -91,7 +92,10 @@ def w2v_pred_from_loader(loader):
 
 def decode(logits, w2v_processor, use_lm=True):
     pred_ids = torch.argmax(logits, dim=-1)
-    predicted_transcription = w2v_processor.batch_decode(pred_ids)
+    if isinstance(w2v_processor, Wav2Vec2ProcessorWithLM):
+        predicted_transcription = w2v_processor.dtokenizer.batch_decode(pred_ids)
+    else:
+        predicted_transcription = w2v_processor.batch_decode(pred_ids)
     if predicted_transcription:
         predicted_transcription = predicted_transcription[0]
         if use_lm:

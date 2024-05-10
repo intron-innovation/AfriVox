@@ -135,6 +135,18 @@ def parse_argument():
     default=False,
     help="whether to load lora model or not",
     )
+    parser.add_argument(
+    "--use_lm",
+    default=False,
+    help="whether to use  a language model",
+    )
+
+    parser.add_argument(
+    "--lm_path",
+    type=str,
+    default="/data4/abraham/robustness/spelling_correction/3m_index_april_2024_5gram.arpa",
+    help="id of the whisper model",
+    )
 
     return parser.parse_args()
 
