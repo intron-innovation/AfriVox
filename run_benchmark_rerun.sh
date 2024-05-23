@@ -2,7 +2,8 @@
 
 
 
-models_list=("/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep5_3e5_17500-45000/checkpoints/checkpoint-2500" \
+models_list=("/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000_new/checkpoints/checkpoint-10000" \
+            #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep5_3e5_17500-45000/checkpoints/checkpoint-2500" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep5_3e5_17500-45000/checkpoints/checkpoint-5000" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep5_3e5_17500/checkpoints/checkpoint-37500" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_group_lengths_4x4gpu_may24_normal_lr_ep5/checkpoints/checkpoint-17500" \
