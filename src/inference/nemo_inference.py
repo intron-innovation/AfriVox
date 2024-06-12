@@ -14,7 +14,7 @@ from nemo.collections.asr.models import EncDecCTCModelBPE
 from nemo_text_processing.inverse_text_normalization.inverse_normalize import InverseNormalizer
 
 tqdm.pandas()
-ctc = ['conformer', 'ctc']
+ctc = ['conformer', 'ctc', 'parakeet']
 rnnt = ['rnnt']
 mtl = ['canary']
 
@@ -55,7 +55,10 @@ class IntronNemo():
         """
         if not os.path.exists(model_path):
             raise FileNotFoundError("The model path provided does not exist.")
-        self.model = model_type.restore_from(model_path, map_location=map_location)  
+        if model_path.endswith(".nemo"):
+            self.model = model_type.restore_from(model_path, map_location=map_location)  
+        else:
+            self.model = model_type.load_from_checkpoint(model_path) 
         self.model_dir = os.path.dirname(model_path)
         self.new_tokenizer = spm.SentencePieceProcessor()
         tokenizer_path = os.path.join(self.model_dir, "tokenizer.model")
@@ -64,7 +67,6 @@ class IntronNemo():
         self.new_tokenizer.load(tokenizer_path)
         self.new_vocabs = [self.new_tokenizer.id_to_piece(id) for id in range(self.new_tokenizer.get_piece_size())]
         self.decoder = build_ctcdecoder(self.new_vocabs)
-        self._register_hooks()
 
     def _register_hooks(self):
         """
