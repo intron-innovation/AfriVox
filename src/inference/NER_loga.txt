@@ -1,0 +1,3 @@
+Medical NER: intron-open-test--wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf-checkpoints-checkpoint-45000-prod2-wer-0.4629-962_full.csv
+NER WER: 0.37643992264357184
+Normal WER: 0.3969425930972969

@@ -2,11 +2,13 @@ import pandas as pd
 import ast
 import jiwer
 import re
+import string
 from nltk import everygrams
 from difflib import SequenceMatcher
 from src.utils.text_processing import clean_filler_words
 
 
+translator = str.maketrans('', '', string.punctuation)
 
 def clean_text(text):
     """
@@ -35,11 +37,13 @@ def clean_text(text):
         .replace(" full stop", " ") \
         .replace(",.", " ") \
         .replace(",,", " ") \
+        .replace("?", " ") \
         .replace(",", " ") \
         .replace(".", " ") \
         .replace("  ", " ") \
         .strip()
     text = " ".join(text.split())
+    text = text.translate(translator)
     text = re.sub(r"[^a-zA-Z0-9\s\.\,\-\?\:\'\/\(\)\[\]\+\%]", '', text)
     return text
 
@@ -158,29 +162,43 @@ def main(df_pred, df_test):
     
     
     df_merge = pd.merge(df_test, df_pred[["audio_id", "pred_clean" ]], on="audio_id")
-    #df_merge = df_merge[~df_merge.MEDICAL_CONDITION.isna()]
 
-    for category in VALID_CATEGORIES:
-        df_merge[f"pred_{category}_exact"] = df_merge.apply(lambda x: exact_pred_entities(x, category=category), axis=1)
-
+   
 
     df_merge["pred_cat_entities_medtextalign"] = df_merge.apply(lambda x: f(x), axis=1)
+    df_merge['pred_clean'] = df_merge['pred_clean'].apply(clean_text)
+    df_merge["entity_wer"] = df_merge.apply(
+            lambda row: jiwer.wer(row["cat_entities"].replace("_", " "), row['pred_cat_entities_medtextalign'].replace("_", " ")), axis=1
+        )
+    entity_wer = jiwer.wer(list(df_merge["cat_entities"].str.replace("_", " ")), list(df_merge['pred_cat_entities_medtextalign'].str.replace("_", " ")))
 
-    df_merge["medical_wer"] = df_merge.apply(
-        lambda row: jiwer.wer(row["cat_entities"], row["pred_cat_entities_medtextalign"]), axis=1
-    )
-    medical_wer = jiwer.wer(list(df_merge["cat_entities"]), list(df_merge["pred_cat_entities_medtextalign"]))
     df_merge["wer"] = df_merge.apply(
         lambda row: jiwer.wer(row["transcript"], row["pred_clean"]), axis=1
     )
     normal_wer = jiwer.wer(list(df_merge["transcript"]), list(df_merge["pred_clean"]))
 
-    print("Medical WER:", medical_wer)
+    print("NER WER:", entity_wer)
     print("Normal WER:", normal_wer)
 
 if __name__ == "__main__":
-    pred_csv_path = "/data4/abraham/asr_benchmarking/results/intron-open-test--wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf-checkpoints-checkpoint-45000-prod2-wer-0.4629-962_full.csv"
-    ref_csv_path = "/data4/abraham/asr_benchmarking/data/intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28_medical_wer.csv"
-    df_ref = pd.read_csv(ref_csv_path)
-    df_pred = pd.read_csv(pred_csv_path)
-    main(df_pred, df_ref)
+    pred_paths = ["intron-open-test--wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf-checkpoints-checkpoint-45000-prod2-wer-0.4629-962_full.csv", "intron-open-test-parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs-2024-06-08_09-17-18-checkpoints-ASR-Model-Language-en.nemo-prod2-wer-0.3461-962_full.csv",
+                  "intron-open-test-lg_robust_500k_steps-wer-0.5518-962.csv", "intron-open-test-w2v_robust_200k_prod-wer-0.6764-962.csv"]
+    medical_ner = "intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28_medical_wer.csv"
+    africa_ner = "intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28_africa_ner.csv"
+    ref_path = "/data3/abraham/asr_benchmarking/data/" 
+    pred_path  = "/data3/abraham/asr_benchmarking/results/"
+    refs = {"Medical NER": medical_ner, "Africa NER": africa_ner}
+
+    for k, v in refs.items():
+        ref_csv_path = ref_path + v
+        df_ref = pd.read_csv(ref_csv_path)
+        for file_p in pred_paths:
+            pred_csv_path = pred_path + file_p
+            df_pred = pd.read_csv(pred_csv_path)
+            print(f"{k}: {file_p}")
+            main(df_pred, df_ref)
+            print("\n\n")
+
+
+    # pred_csv_path = "/data3/abraham/asr_benchmarking/results/intron-open-test--wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf-checkpoints-checkpoint-45000-prod2-wer-0.4629-962_full.csv"
+    # ref_csv_path = "/data3/abraham/asr_benchmarking/data/intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28_medical_wer.csv"
