@@ -1,48 +1,60 @@
-Medical NER: intron-open-test--wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf-checkpoints-checkpoint-45000-prod2-wer-0.4629-962_full.csv
-NER WER: 0.37643992264357184
-Normal WER: 0.3969425930972969
+Medical NER: intron-open-test-nvidia-parakeet-ctc-0.6b-wer-0.3818-962.csv
+NER WER: 0.3585302278651307
+Normal WER: 0.30090929362503405
 
 
 
-Medical NER: intron-open-test-parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs-2024-06-08_09-17-18-checkpoints-ASR-Model-Language-en.nemo-prod2-wer-0.3461-962_full.csv
-NER WER: 0.3343983856049777
-Normal WER: 0.27271375833106215
+Medical NER: intron-open-test-nvidia-parakeet-rnnt-1.1b-wer-0.3211-962.csv
+NER WER: 0.22811737997141177
+Normal WER: 0.2313371819330542
 
 
 
-Medical NER: intron-open-test-lg_robust_500k_steps-wer-0.5518-962.csv
-NER WER: 0.37274026738417554
-Normal WER: 0.4702311637471817
+Medical NER: intron-open-test-distil-whisper-distil-large-v2-wer-0.3393-962.csv
+NER WER: 0.39266795594046916
+Normal WER: 0.2999430142959788
 
 
 
-Medical NER: intron-open-test-w2v_robust_200k_prod-wer-0.6764-962.csv
-NER WER: 0.4651475657950055
-Normal WER: 0.6387849656846957
+Medical NER: intron-open-test-openai-whisper-medium-wer-0.3549-962.csv
+NER WER: 0.3147229462709157
+Normal WER: 0.3112906023141151
 
 
 
-Africa NER: intron-open-test--wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf-checkpoints-checkpoint-45000-prod2-wer-0.4629-962_full.csv
-NER WER: 0.6111111111111112
-Normal WER: 0.37707462308374506
+Medical NER: intron-open-test-openai-whisper-large-v2-wer-0.2976-962.csv
+NER WER: 0.23383502900866054
+Normal WER: 0.27328361537127427
 
 
 
-Africa NER: intron-open-test-parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs-2024-06-08_09-17-18-checkpoints-ASR-Model-Language-en.nemo-prod2-wer-0.3461-962_full.csv
-NER WER: 0.616504854368932
-Normal WER: 0.26526669200557457
+Africa NER: intron-open-test-nvidia-parakeet-ctc-0.6b-wer-0.3818-962.csv
+NER WER: 0.551779935275081
+Normal WER: 0.28588622830356014
 
 
 
-Africa NER: intron-open-test-lg_robust_500k_steps-wer-0.5518-962.csv
-NER WER: 0.6116504854368932
-Normal WER: 0.44837197516787025
+Africa NER: intron-open-test-nvidia-parakeet-rnnt-1.1b-wer-0.3211-962.csv
+NER WER: 0.5199568500539374
+Normal WER: 0.22098695046243508
 
 
 
-Africa NER: intron-open-test-w2v_robust_200k_prod-wer-0.6764-962.csv
-NER WER: 0.6909385113268608
-Normal WER: 0.6134866337260864
+Africa NER: intron-open-test-distil-whisper-distil-large-v2-wer-0.3393-962.csv
+NER WER: 0.5242718446601942
+Normal WER: 0.28667806917521854
+
+
+
+Africa NER: intron-open-test-openai-whisper-medium-wer-0.3549-962.csv
+NER WER: 0.48058252427184467
+Normal WER: 0.3111617889268973
+
+
+
+Africa NER: intron-open-test-openai-whisper-large-v2-wer-0.2976-962.csv
+NER WER: 0.3656957928802589
+Normal WER: 0.2622260230584062
 
 
 

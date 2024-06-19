@@ -3,6 +3,9 @@ import argparse
 import pandas as pd
 from pathlib import Path
 import json
+import re 
+from difflib import SequenceMatcher
+
 
 
 def write_pred(model_id_or_path, results, wer, cols=None, output_dir="./results", split="dev"):
@@ -219,3 +222,29 @@ def correct_audio_paths(data, audio_dir, split):
             )
         data['audio_ids'] = data.index.astype("string")
     return data
+
+
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+def get_most_similar_word(entity, prediction):
+    similarity_scores = []
+    
+    predicted_words = prediction.split(" ")
+    for word in predicted_words:
+        
+        find_word = re.findall(r"\w+", word)
+        if len(find_word) == 0:
+            continue
+        elif len(find_word[0])  <= 1:
+            continue
+        similarity_score = (word, similar(entity, word))
+        similarity_scores.append(similarity_score)
+    
+    
+    if len(similarity_scores) != 0:
+        most_similar_word = max(similarity_scores, key=lambda x: x[1])
+    else:
+        most_similar_word = ("", 0)
+        
+    return most_similar_word
