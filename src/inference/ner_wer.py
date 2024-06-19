@@ -97,11 +97,14 @@ def main(df_pred, df_test):
     print("Normal WER:", normal_wer)
 
 if __name__ == "__main__":
-    pred_paths = ["intron-open-test-nvidia-parakeet-ctc-0.6b-wer-0.3818-962.csv",
-                    "intron-open-test-nvidia-parakeet-rnnt-1.1b-wer-0.3211-962.csv",
-                    "intron-open-test-distil-whisper-distil-large-v2-wer-0.3393-962.csv",
-                    "intron-open-test-openai-whisper-medium-wer-0.3549-962.csv",
-                    "intron-open-test-openai-whisper-large-v2-wer-0.2976-962.csv"]
+    pred_paths = ["intron-open-test-nvidia-canary-1b-wer-0.4342-962.csv",
+                    "intron-open-test-distil-whisper-distil-large-v3-prod2-wer-0.3499-962.csv",
+                    "intron-open-test-openai-whisper-small-wer-0.5557-962.csv",
+                    "intron-open-test-whisper_small_afrispeech_10e-wer-0.5671-962.csv",
+                    ""
+                    "intron-open-test--data4-saved_models-whisper_small_afrispeech_10e_lora-prod2-wer-0.7786-962.csv",
+                    "intron-open-whisper_medium_afrispeech_20e_lora-prod2-wer-0.5419-962.csv"
+                    ]
     
     # ["intron-open-test--wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf-checkpoints-checkpoint-45000-prod2-wer-0.4629-962_full.csv", "intron-open-test-parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs-2024-06-08_09-17-18-checkpoints-ASR-Model-Language-en.nemo-prod2-wer-0.3461-962_full.csv",
     #               "intron-open-test-lg_robust_500k_steps-wer-0.5518-962.csv", "intron-open-test-w2v_robust_200k_prod-wer-0.6764-962.csv"]
