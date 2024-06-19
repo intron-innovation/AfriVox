@@ -33,10 +33,10 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
             result = batched_whisper_inference(fpath_wav, model_, processor_, max_len_secs=20)
         else:
             raise NotImplementedError(f"{args_.model_id_or_path} not supported")
-        results.append([fpath_wav, example.text, result])
+        results.append([example.audio_id, fpath_wav, example.text, result])
         if debug:
             print(f"{args_.model_id_or_path} decoding {fpath_wav} done in {time.time() - start:.4f}s")
-    results_ = pd.DataFrame(results, columns=['sampled_id', 'audio_path', 'reference', 'hypothesis'])
+    results_ = pd.DataFrame(results, columns=['audio_id', 'audio_path', 'reference', 'hypothesis'])
 
     return results_
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     args = parse_argument()
     device = torch.device(
-        "cuda" if (torch.cuda.is_available() and args.gpu > -1) else "cpu"
+        "cpu" if (torch.cuda.is_available() and args.gpu > -1) else "cpu"
     )
     print(device)
 
@@ -71,7 +71,6 @@ if __name__ == "__main__":
     
     assert "audio_path" in dataset.columns
     assert "text" in dataset.columns
-    dataset = dataset.rename(columns ={"audio_id":"sample_id"})
     dataset = correct_audio_paths(dataset, args.audio_dir, split)
     dataset = dataset[dataset["audio_path"].apply(os.path.exists)]
 

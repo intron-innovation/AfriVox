@@ -15,7 +15,7 @@ from nemo_text_processing.inverse_text_normalization.inverse_normalize import In
 
 tqdm.pandas()
 ctc = ['conformer', 'ctc', 'parakeet']
-rnnt = ['rnnt']
+rnnt = ['rnnt', 'tdt']
 mtl = ['canary']
 
 model_mapping = {
@@ -106,7 +106,7 @@ def load_nemo_models(args):
 
         model = IntronNemo(args.model_id_or_path, model_type=model_type)
     else:
-        model = model_type.from_pretrained(args.model_id_or_path)
+        model = model_type.from_pretrained(args.model_id_or_path,  map_location="cpu")
     return model, processor
 
 
