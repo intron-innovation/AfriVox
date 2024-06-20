@@ -1,5 +1,5 @@
 import os
-os.environ['HF_HOME'] = '/data4/.cache/'
+os.environ['HF_HOME'] = '/data7/.cache/'
 os.environ['XDG_CACHE_HOME'] = '/data4/.cache/'
 import logging
 import time
@@ -72,7 +72,7 @@ def load_afri_speech_data(
     data = pd.read_csv(data_path)
     
     print(f"start {split}: {data.shape}")
-  
+    breakpoint()
     
     if "audio_paths" in data.columns:
         if split == 'aug':
@@ -91,7 +91,7 @@ def load_afri_speech_data(
         # lambda x: x.replace(f"/AfriSpeech-100/{split}/", f"/{audio_dir}/{split}/")
     else:
         data["audio_paths"] = data["audio_path"].apply(
-                lambda x: x.replace(f"/data/data/", audio_dir)
+                lambda x: x.replace(f"/data4/data/", audio_dir)
             )
         data['audio_ids'] = data.index.astype("string")
     

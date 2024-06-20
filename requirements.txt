@@ -14,3 +14,4 @@ git+https://github.com/owos/NeMo.git#egg=nemo_toolkit[all]
 transformers
 peft==0.7.1
 bitsandbytes==0.42.0
+pyctcdecode

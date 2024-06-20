@@ -2,7 +2,18 @@
 
 
 
-models_list=("/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000_new/checkpoints/checkpoint-10000" \
+models_list=("/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_vocab_replacement_3epochs_2e-5/experiments/lang-en/ASR-Model-Language-en/2024-06-17_07-21-44/checkpoints/ASR-Model-Language-en.nemo" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs/experiments/lang-en/ASR-Model-Language-en/2024-06-08_09-17-18/checkpoints/ASR-Model-Language-en--val_wer=0.2001-epoch=3-last.ckpt" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs/experiments/lang-en/ASR-Model-Language-en/2024-06-08_09-17-18/checkpoints/ASR-Model-Language-en.nemo" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs/Model-en.nemo" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs/experiments/lang-en/ASR-Model-Language-en/2024-06-08_09-17-18/checkpoints/ASR-Model-Language-en--val_wer=0.2011-epoch=2-last.ckpt" \
+            #/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement_restart_at_5epochs/experiments/lang-en/ASR-Model-Language-en/checkpoints/ASR-Model-Language-en.nemo" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement_restart_at_5epochs/experiments/lang-en/ASR-Model-Language-en/checkpoints/ASR-Model-Language-en.nemo" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement/experiments/lang-en/ASR-Model-Language-en/checkpoints/ASR-Model-Language-en.nemo" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement/experiments/lang-en/ASR-Model-Language-en/checkpoints/ASR-Model-Language-en--val_wer=0.0789-epoch=4-last.ckpt" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement/experiments/lang-en/ASR-Model-Language-en/checkpoints/ASR-Model-Language-en.nemo" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement/ASR-Model-Language-en_ctc_.nemo" \
+            #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000_new/checkpoints/checkpoint-10000" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep5_3e5_17500-45000/checkpoints/checkpoint-2500" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep5_3e5_17500-45000/checkpoints/checkpoint-5000" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep5_3e5_17500/checkpoints/checkpoint-37500" \
