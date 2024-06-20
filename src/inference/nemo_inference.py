@@ -1,5 +1,5 @@
 import os
-data_home = "data4"
+data_home = "data7"
 os.environ["HF_HOME"] = f"/{data_home}/.cache/"
 os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 from typing import Union, List
@@ -14,7 +14,7 @@ from nemo.collections.asr.models import EncDecCTCModelBPE
 from nemo_text_processing.inverse_text_normalization.inverse_normalize import InverseNormalizer
 
 tqdm.pandas()
-ctc = ['conformer', 'ctc']
+ctc = ['conformer', 'ctc', 'parakeet']
 rnnt = ['rnnt']
 mtl = ['canary']
 
@@ -55,7 +55,7 @@ class IntronNemo():
         """
         if not os.path.exists(model_path):
             raise FileNotFoundError("The model path provided does not exist.")
-        self.model = model_type.restore_from(model_path, map_location=map_location)  
+        self.model = model_type.load_from_checkpoint(model_path) 
         self.model_dir = os.path.dirname(model_path)
         self.new_tokenizer = spm.SentencePieceProcessor()
         tokenizer_path = os.path.join(self.model_dir, "tokenizer.model")
@@ -64,8 +64,7 @@ class IntronNemo():
         self.new_tokenizer.load(tokenizer_path)
         self.new_vocabs = [self.new_tokenizer.id_to_piece(id) for id in range(self.new_tokenizer.get_piece_size())]
         self.decoder = build_ctcdecoder(self.new_vocabs)
-        self._register_hooks()
-
+    
     def _register_hooks(self):
         """
         Register a forward hook to print out the shape of the outputs for debugging.
@@ -100,8 +99,10 @@ def load_nemo_models(args):
     processor = None
     model_type = get_model_type(args.model_id_or_path)  # Assuming you have a command-line argument or some way to specify the model type
 
-    if os.path.exists(args.model_id_or_path):
+    if os.path.exists(args.model_id_or_path) and ".nemo" in args.model_id_or_path:
 
+        model = nemo_asr.models.EncDecCTCModelBPE.restore_from(args.model_id_or_path)
+    elif os.path.exists(args.model_id_or_path) and ".ckpt" in args.model_id_or_path:
         model = IntronNemo(args.model_id_or_path, model_type=model_type)
     else:
         model = model_type.from_pretrained(args.model_id_or_path)
