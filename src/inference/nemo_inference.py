@@ -105,7 +105,7 @@ def load_nemo_models(args):
     elif os.path.exists(args.model_id_or_path) and ".ckpt" in args.model_id_or_path:
         model = IntronNemo(args.model_id_or_path, model_type=model_type)
     else:
-        model = model_type.from_pretrained(args.model_id_or_path)
+        model = model_type.from_pretrained(args.model_id_or_path,  map_location="cpu")
     return model, processor
 
 

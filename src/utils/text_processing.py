@@ -1,5 +1,6 @@
 import re
 import jiwer
+import string
 from whisper.normalizers import EnglishTextNormalizer
 
 
@@ -20,6 +21,8 @@ inaudible_tags = ['[music] [inaudible]', '(inaudible) ', '[inaudible)', '(inaudi
 inaudible_tags_regex = [x.replace('[', '\[').replace(']', '\]').replace('(', '\(').replace(')', '\)') for x in inaudible_tags]
 inaudible_tags_joined = "|".join(inaudible_tags_regex)
 rx = re.compile(inaudible_tags_joined, re.I)
+translator = str.maketrans('', '', string.punctuation)
+
 
 
 def clean_text(text):
@@ -54,6 +57,13 @@ def clean_text(text):
     text = re.sub(r"[^a-zA-Z0-9\s\.\,\-\?\:\'\/\(\)\[\]\+\%]", '', text)
     return text
 
+
+
+
+def clean_text_ner(text):
+    text = clean_text(text)
+    text = text.translate(translator)
+    return text
 
 def clean_filler_words(text):
     text = text.replace("inaudible. ", "").replace("inaudible", "")\

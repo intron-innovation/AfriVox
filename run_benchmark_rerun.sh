@@ -3,6 +3,7 @@
 
 
 models_list=("/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_vocab_replacement_3epochs_2e-5/experiments/lang-en/ASR-Model-Language-en/2024-06-17_07-21-44/checkpoints/ASR-Model-Language-en.nemo" \
+            #"nvidia/parakeet-tdt-1.1b" \
             #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs/experiments/lang-en/ASR-Model-Language-en/2024-06-08_09-17-18/checkpoints/ASR-Model-Language-en--val_wer=0.2001-epoch=3-last.ckpt" \
             #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs/experiments/lang-en/ASR-Model-Language-en/2024-06-08_09-17-18/checkpoints/ASR-Model-Language-en.nemo" \
             #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs/Model-en.nemo" \
@@ -13,6 +14,10 @@ models_list=("/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/
             #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement/experiments/lang-en/ASR-Model-Language-en/checkpoints/ASR-Model-Language-en--val_wer=0.0789-epoch=4-last.ckpt" \
             #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement/experiments/lang-en/ASR-Model-Language-en/checkpoints/ASR-Model-Language-en.nemo" \
             #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_e2_vocab_replacement/ASR-Model-Language-en_ctc_.nemo" \
+            #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_june24_ep2_3e4_67500_2e_7/checkpoints/checkpoint-26000/" \
+            #"/data4/saved_models/parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs/experiments/lang-en/ASR-Model-Language-en/2024-06-08_09-17-18/checkpoints/ASR-Model-Language-en.nemo" \
+            #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf/checkpoints/checkpoint-45000" \
+            # "/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf/checkpoints/checkpoint-30000" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000_new/checkpoints/checkpoint-10000" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep5_3e5_17500-45000/checkpoints/checkpoint-2500" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/wav2vec2_large_robust_6m_may24_normal_lr_ep5_3e5_17500-45000/checkpoints/checkpoint-5000" \
@@ -52,7 +57,7 @@ for model in ${models_list[@]};
     for audio_path in ${audio_paths[@]}; 
         do
         echo $csv_path $model 
-        CUDA_VISIBLE_DEVICES=0 python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 1 \
+        CUDA_VISIBLE_DEVICES=0 python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 0 \
             --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  --lora False --use_lm False \
             --lm_path /data4/abraham/robustness/spelling_correction/3m_index_april_2024_5gram.arpa 
     done
