@@ -97,21 +97,20 @@ def main(df_pred, df_test):
     print("Normal WER:", normal_wer)
 
 if __name__ == "__main__":
-    pred_paths = ["intron-open-test-nvidia-canary-1b-wer-0.4342-962.csv",
-                    "intron-open-test-distil-whisper-distil-large-v3-prod2-wer-0.3499-962.csv",
-                    "intron-open-test-openai-whisper-small-wer-0.5557-962.csv",
-                    "intron-open-test-whisper_small_afrispeech_10e-wer-0.5671-962.csv",
-                    ""
-                    "intron-open-test--data4-saved_models-whisper_small_afrispeech_10e_lora-prod2-wer-0.7786-962.csv",
-                    "intron-open-whisper_medium_afrispeech_20e_lora-prod2-wer-0.5419-962.csv"
+    pred_paths = [  "intron-open-test--parakeet_6m_vocab_replacement_3epochs_2e-5-experiments-lang-en-ASR-Model-Language-en-2024-06-17_07-21-44-checkpoints-ASR-Model-Language-en.nemo-prod2-wer-0.3369-962.csv",
+                    # "intron-open-test-nvidia-canary-1b-wer-0.4342-962.csv",
+                    # "intron-open-test-distil-whisper-distil-large-v3-prod2-wer-0.3499-962.csv",
+                    # "intron-open-test-openai-whisper-small-wer-0.5557-962.csv",
+                    # "intron-open-test-whisper_small_afrispeech_10e-wer-0.5671-962.csv",
+                    # ""
+                    # "intron-open-test--data4-saved_models-whisper_small_afrispeech_10e_lora-prod2-wer-0.7786-962.csv",
+                    # "intron-open-whisper_medium_afrispeech_20e_lora-prod2-wer-0.5419-962.csv"
                     ]
     
-    # ["intron-open-test--wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf-checkpoints-checkpoint-45000-prod2-wer-0.4629-962_full.csv", "intron-open-test-parakeet_6m_e2_vocab_replacement_restart_at_5epochs_2epochs-2024-06-08_09-17-18-checkpoints-ASR-Model-Language-en.nemo-prod2-wer-0.3461-962_full.csv",
-    #               "intron-open-test-lg_robust_500k_steps-wer-0.5518-962.csv", "intron-open-test-w2v_robust_200k_prod-wer-0.6764-962.csv"]
     medical_ner = "intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28_medical_wer.csv"
     africa_ner = "intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28_africa_ner.csv"
-    ref_path = "/data3/abraham/asr_benchmarking/data/" 
-    pred_path  = "/data3/abraham/asr_benchmarking/results/"
+    ref_path = "/data7/abraham/asr_benchmarking/data/" 
+    pred_path  = "/data7/abraham/asr_benchmarking/results/"
     refs = {"Medical NER": medical_ner, "Africa NER": africa_ner}
 
     for k, v in refs.items():
@@ -123,7 +122,3 @@ if __name__ == "__main__":
             print(f"{k}: {file_p}")
             main(df_pred, df_ref)
             print("\n\n")
-
-
-    # pred_csv_path = "/data3/abraham/asr_benchmarking/results/intron-open-test--wav2vec2_large_robust_6m_may24_normal_lr_ep1_3e4_17500-45000-2500_no_inf-checkpoints-checkpoint-45000-prod2-wer-0.4629-962_full.csv"
-    # ref_csv_path = "/data3/abraham/asr_benchmarking/data/intron_fresh_audio_Production-Test-Set-Quality_2024_03_05_21_16_28_medical_wer.csv"
