@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     args = parse_argument()
     device = torch.device(
-        "cpu" if (torch.cuda.is_available() and args.gpu > -1) else "cpu"
+        "cuda" if (torch.cuda.is_available() and args.gpu > -1) else "cpu"
     )
     print(device)
 

@@ -97,7 +97,8 @@ def main(df_pred, df_test):
     print("Normal WER:", normal_wer)
 
 if __name__ == "__main__":
-    pred_paths = [  "intron-open-test--parakeet_6m_vocab_replacement_3epochs_2e-5-experiments-lang-en-ASR-Model-Language-en-2024-06-17_07-21-44-checkpoints-ASR-Model-Language-en.nemo-prod2-wer-0.3369-962.csv",
+    pred_paths = [  "intron-open-test--data4-saved_models-lg_robust_550k-prod2-wer-0.4569-962.csv",
+                    #"intron-open-test--parakeet_6m_vocab_replacement_3epochs_2e-5-experiments-lang-en-ASR-Model-Language-en-2024-06-17_07-21-44-checkpoints-ASR-Model-Language-en.nemo-prod2-wer-0.3369-962.csv",
                     # "intron-open-test-nvidia-canary-1b-wer-0.4342-962.csv",
                     # "intron-open-test-distil-whisper-distil-large-v3-prod2-wer-0.3499-962.csv",
                     # "intron-open-test-openai-whisper-small-wer-0.5557-962.csv",
