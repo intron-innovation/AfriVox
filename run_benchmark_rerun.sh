@@ -2,7 +2,8 @@
 
 
 
-models_list=("/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_intron_vocab_3epochs_2e-4/experiments/lang-en/ASR-Model-Language-en/checkpoints/ASR-Model-Language-en.nemo" \
+models_list=( "/data4/saved_models/6m_june_lg-robust_65000" \
+            #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_intron_vocab_3epochs_2e-4/experiments/lang-en/ASR-Model-Language-en/checkpoints/ASR-Model-Language-en.nemo" \
             #"/data4/saved_models/lg_robust_550k" \
             #"/data7/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/parakeet_6m_vocab_replacement_3epochs_2e-5/experiments/lang-en/ASR-Model-Language-en/2024-06-17_07-21-44/checkpoints/ASR-Model-Language-en.nemo" \
             #"nvidia/parakeet-tdt-1.1b" \

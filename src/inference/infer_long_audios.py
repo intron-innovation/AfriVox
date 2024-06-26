@@ -24,7 +24,7 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
         fpath_wav = example.audio_path
         start = time.time()
         if any(sub in args_.model_id_or_path for sub in WAV2VEC2_MODELS):
-            result = stream_audio(fpath_wav, model_, processor_, context_length_secs=5, use_lm=False)
+            result = stream_audio(fpath_wav, model_, processor_, context_length_secs=15, use_lm=False)
         elif any(sub in args_.model_id_or_path for sub in NEMO_MODELS):
             result = model_.transcribe([fpath_wav])[0]
             if type(result) == list:
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     args = parse_argument()
     device = torch.device(
-        "cpu" if (torch.cuda.is_available() and args.gpu > -1) else "cpu"
+        "cuda" if (torch.cuda.is_available() and args.gpu > -1) else "cpu"
     )
     print(device)
 
