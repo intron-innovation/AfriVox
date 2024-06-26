@@ -1,0 +1,84 @@
+Medical NER: intron-open-test--wav2vec2_large_robust_6m_june24_ep2_3e4_67500_2e_7-26000-prod2-wer-0.505-962.csv
+NER WER: 0.3954426973850164
+Normal WER: 0.444488491365427
+
+
+
+Medical NER: intron-open-test-nvidia-canary-1b-wer-0.4342-962.csv
+NER WER: 0.3960312789035567
+Normal WER: 0.39404375511013107
+
+
+
+Medical NER: intron-open-test-distil-whisper-distil-large-v3-prod2-wer-0.3499-962.csv
+NER WER: 0.3567644833095098
+Normal WER: 0.3040063427566215
+
+
+
+Medical NER: intron-open-test-openai-whisper-small-wer-0.5557-962.csv
+NER WER: 0.42150845034894474
+Normal WER: 0.5069745546443348
+
+
+
+Medical NER: intron-open-test-whisper_small_afrispeech_10e-wer-0.5671-962.csv
+NER WER: 0.43731606827545616
+Normal WER: 0.5012264314561086
+
+
+
+Medical NER: intron-open-test--data4-saved_models-whisper_small_afrispeech_10e_lora-prod2-wer-0.7786-962.csv
+NER WER: 0.33431430253090055
+Normal WER: 0.6416590272788087
+
+
+
+Medical NER: intron-open-whisper_medium_afrispeech_20e_lora-prod2-wer-0.5419-962.csv
+NER WER: 0.25948036660220297
+Normal WER: 0.44000396422288846
+
+
+
+Africa NER: intron-open-test--wav2vec2_large_robust_6m_june24_ep2_3e4_67500_2e_7-26000-prod2-wer-0.505-962.csv
+NER WER: 0.6413160733549083
+Normal WER: 0.4176485493475231
+
+
+
+Africa NER: intron-open-test-nvidia-canary-1b-wer-0.4342-962.csv
+NER WER: 0.5399137001078749
+Normal WER: 0.3697896870644875
+
+
+
+Africa NER: intron-open-test-distil-whisper-distil-large-v3-prod2-wer-0.3499-962.csv
+NER WER: 0.5204962243797195
+Normal WER: 0.2836374002280502
+
+
+
+Africa NER: intron-open-test-openai-whisper-small-wer-0.5557-962.csv
+NER WER: 0.5285868392664509
+Normal WER: 0.4296845305967313
+
+
+
+Africa NER: intron-open-test-whisper_small_afrispeech_10e-wer-0.5671-962.csv
+NER WER: 0.633764832793959
+Normal WER: 0.4819143544913214
+
+
+
+Africa NER: intron-open-test--data4-saved_models-whisper_small_afrispeech_10e_lora-prod2-wer-0.7786-962.csv
+NER WER: 0.5652642934196332
+Normal WER: 0.5819713670340808
+
+
+
+Africa NER: intron-open-whisper_medium_afrispeech_20e_lora-prod2-wer-0.5419-962.csv
+NER WER: 0.5
+Normal WER: 0.373970606866844
+
+
+
