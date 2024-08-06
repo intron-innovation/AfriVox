@@ -27,6 +27,7 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
             result = stream_audio(fpath_wav, model_, processor_, context_length_secs=15, use_lm=False)
         elif any(sub in args_.model_id_or_path for sub in NEMO_MODELS):
             result = model_.transcribe([fpath_wav])[0]
+            # result = batched_nemo_inference(fpath_wav, model_, max_len_secs=20)
             if type(result) == list:
                 result = result[0]
         elif "whisper" in args_.model_id_or_path:
