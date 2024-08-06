@@ -3,6 +3,8 @@ import math
 import numpy as np
 import time
 import torch
+import os
+import soundfile as sf
 
 from src.utils.audio_processing import load_audio_file, split_audio_full, get_byte_chunks, bytes_to_array
 from src.utils.text_processing import clean_text
@@ -202,7 +204,7 @@ def stream_audio(audio_path, wv_model, w2v_processor, context_length_secs=5, use
 def predict_whisper(speech, model, processor, use_lm=False):
     input_features = processor(speech, sampling_rate=16000,
                                  return_tensors="pt").input_features
-    input_features = input_features.to(device)#.half()
+    input_features = input_features.to(device).half()
 
     with torch.no_grad():
         pred_ids = model.generate(input_features)
@@ -228,4 +230,25 @@ def batched_whisper_inference(audio_path, model, processor, max_len_secs=15, use
 
     transcripts = " ".join(transcripts)
     print(f"decoding done in {time.time() - start:.4f}s")
+    return transcripts
+
+def batched_nemo_inference(audio_path, model, max_len_secs=15, use_lm=False, debug=False):
+    start = time.time()
+    chunks = split_audio_full(audio_path, max_len_secs=max_len_secs, sampling_rate=16000)
+    print(f"num chunks: {len(chunks)}, idx 0 shape= {chunks[0].shape}")
+    transcripts = []
+    for i, speech in enumerate(tqdm(chunks)):
+        #save chunks as temp.wav
+        sf.write('temp.wav', speech, 16000)
+        predicted_transcription = model.transcribe(['temp.wav'])[0]
+        if type(predicted_transcription) == list:
+                predicted_transcription = predicted_transcription[0]
+        transcripts.append(predicted_transcription)
+        if debug:
+            print(f"chunk {i} len {len(speech)} -> {predicted_transcription}")
+
+    transcripts = " ".join(transcripts)
+    
+    print(f"decoding done in {time.time() - start:.4f}s")
+    os.remove('temp.wav')
     return transcripts
