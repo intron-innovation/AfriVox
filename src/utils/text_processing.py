@@ -23,6 +23,8 @@ inaudible_tags_joined = "|".join(inaudible_tags_regex)
 rx = re.compile(inaudible_tags_joined, re.I)
 translator = str.maketrans('', '', string.punctuation)
 
+general_filler_words = ["ah", "blah", "eh", "hmm", "huh", "hum", "mmhmm", "mm", "oh", "ohh", "uh", "uhhuh", "umhum", "uhhum", "um"]
+
 
 
 def clean_text(text):
@@ -65,9 +67,19 @@ def clean_text_ner(text):
     text = text.translate(translator)
     return text
 
+# def clean_filler_words(text):
+#     text = text.replace("inaudible. ", "").replace("inaudible", "")\
+#         .replace(" ehm, ", " ").replace(" uh, "," ").replace(" er, "," ").replace("...", " ")
+#     return text
+
 def clean_filler_words(text):
     text = text.replace("inaudible. ", "").replace("inaudible", "")\
         .replace(" ehm, ", " ").replace(" uh, "," ").replace(" er, "," ").replace("...", " ")
+    
+    for word in general_filler_words:
+        text = text.replace(f" {word} ", "")   
+        text = text.replace(f" {word},", "")   
+        text = text.replace(f" {word}.", "")
     return text
 
 
