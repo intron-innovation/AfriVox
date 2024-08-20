@@ -67,20 +67,13 @@ def clean_text_ner(text):
     text = text.translate(translator)
     return text
 
-# def clean_filler_words(text):
-#     text = text.replace("inaudible. ", "").replace("inaudible", "")\
-#         .replace(" ehm, ", " ").replace(" uh, "," ").replace(" er, "," ").replace("...", " ")
-#     return text
-
 def clean_filler_words(text):
     text = text.replace("inaudible. ", "").replace("inaudible", "")\
         .replace(" ehm, ", " ").replace(" uh, "," ").replace(" er, "," ").replace("...", " ")
     
-    for word in general_filler_words:
-        text = text.replace(f" {word} ", "")   
-        text = text.replace(f" {word},", "")   
-        text = text.replace(f" {word}.", "")
-    return text
+    tokens = re.findall(r'\b\w+\b', text)
+    cleaned_tokens = [token for token in tokens if token not in general_filler_words]
+    return ' '.join(cleaned_tokens)
 
 
 def detect_inaudible(text):
