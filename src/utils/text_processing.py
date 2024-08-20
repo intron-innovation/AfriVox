@@ -1,6 +1,8 @@
 import re
 import jiwer
 import string
+import os
+from openai import OpenAI
 from whisper.normalizers import EnglishTextNormalizer
 
 
@@ -25,7 +27,7 @@ translator = str.maketrans('', '', string.punctuation)
 
 general_filler_words = ["ah", "blah", "eh", "hmm", "huh", "hum", "mmhmm", "mm", "oh", "ohh", "uh", "uhhuh", "umhum", "uhhum", "um"]
 
-
+api_key = os.getenv('OPENAI_API_KEY')
 
 def clean_text(text):
     """
@@ -208,8 +210,25 @@ def get_minority_accents(data, majority_count=5000):
     print(accent_counts)
     return [accent for accent, count in accent_counts.items() if count < majority_count]
 
+def gpt4_correcter(text):
+    client = OpenAI(api_key=api_key)
+    prompt = f'''You are a helpful African speech-to-text transcription assistant. Your task is to review and correct ASR transcription errors maintaining the wording of the original transcript. Consider diverse speaker accents. 
+                Ensure the enhanced text mirrors the original spoken content without adding new material. DO NOT REPLACE OR ADD ANY OTHER WORDS, but fix punctuation, capitalisation and spellings. 
+                The transcript is a medical conversation, therefore, also correct misspellings of medical terminologies. Your goal is to create a transcript that is accurate to the initial transcript. 
+                Ignore the [blankaudio] turns. Only generate the enhanced transcript.
 
-def post_process_preds(data):
+                Transcript:
+                {text}
+
+                Enhanced transcript:
+                        '''
+    response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[{"role": "user", "content": prompt}]
+            )
+    return response.choices[0].message.content.strip()
+            
+def post_process_preds(data, correct=False):
     assert "hypothesis" in data.columns
     assert "reference" in data.columns
 
@@ -229,6 +248,16 @@ def post_process_preds(data):
     all_wer = jiwer.wer(list(data["ref_clean"]), list(data["pred_clean"]))
     print(f"Cleanup WER: {all_wer * 100:.2f} %")
 
+    if correct:
+                pred_llm = [gpt4_correcter(text) for text in data["hypothesis"]]
+                
+                pred_llm = [text if text != "" else "abcxyz" for text in pred_llm]
+            
+                data["pred_llm"] = pred_llm
+            
+                llm_wer = jiwer.wer(list(data["reference"]), list(data["pred_llm"]))
+                print(f"Autocorrect WER: {llm_wer * 100:.2f} %")
+            
     normalizer = EnglishTextNormalizer()
     pred_normalized = [normalizer(text) for text in data["hypothesis"]]
     gt_normalized = [normalizer(text) for text in data["reference"]]
@@ -241,6 +270,6 @@ def post_process_preds(data):
 
     data["hypothesis_clean"] = [normalizer(text) for text in data["hypothesis"]]
     data["reference_clean"] = [normalizer(text) for text in data["reference"]]
-
+            
     return all_wer
 
