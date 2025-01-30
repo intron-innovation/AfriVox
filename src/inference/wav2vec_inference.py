@@ -1,13 +1,13 @@
 import os
-data_home = "data7"
-os.environ["HF_HOME"] = f"/{data_home}/.cache/"
-os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
+# data_home = "data7"
+# os.environ["HF_HOME"] = f"/{data_home}/.cache/"
+# os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 
 import torch
 import pandas as pd
 from tqdm import tqdm
 from pyctcdecode import build_ctcdecoder
-from transformers import AutoProcessor, AutoModelForCTC, AutoModelForCTC, Wav2Vec2ProcessorWithLM
+from transformers import AutoProcessor, AutoModelForCTC, Wav2Vec2ProcessorWithLM
 
 device = torch.device("cuda" if (torch.cuda.is_available()) else "cpu")
 print(device)
@@ -28,7 +28,9 @@ def load_wav2vec_and_processor(args):
         decoder=decoder
     )
     model = AutoModelForCTC.from_pretrained(args.model_id_or_path)
-
+    if "mms" in args.model_id_or_path:
+        processor.tokenizer.set_target_lang(args.language)
+        model.load_adapter(args.language)
     return model, processor
 
 

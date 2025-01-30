@@ -33,7 +33,7 @@ def write_pred(model_id_or_path, results, wer, cols=None, output_dir="./results"
     return predictions_df
 
 
-def write_pred_inference_df(model_id_or_path, predictions_df, wer, output_dir="./results", split="dev", source="normal"):
+def write_pred_inference_df(model_id_or_path, predictions_df, wer, language, output_dir="./mls_results", split="dev", source="normal"):
     """
     Write model predictions to file
     :param cols: List[str]
@@ -48,7 +48,7 @@ def write_pred_inference_df(model_id_or_path, predictions_df, wer, output_dir=".
     else:
         model_id_or_path = model_id_or_path.replace("/", "-").split("AfriSpeech-Dataset-Paper-src-experiments")[-1]
     
-    output_path = f"{output_dir}/intron-open-{split}-{model_id_or_path}-{source}-wer-{round(wer, 4)}-{len(predictions_df)}.csv"
+    output_path = f"{output_dir}/open-source-{split}-{model_id_or_path}-{language}-wer-{round(wer, 4)}-{len(predictions_df)}.csv"
     predictions_df.to_csv(output_path, index=False)
     print(output_path)
     return predictions_df, output_path
@@ -104,6 +104,9 @@ def parse_argument():
     )
     parser.add_argument(
         "--output_dir", type=str, default="./results", help="directory to store results"
+    )
+    parser.add_argument(
+        "--language", type=str, default="en", help="the language code for the dataset"
     )
     parser.add_argument(
         "--max_audio_len_secs",
@@ -179,7 +182,7 @@ def breakdown_wer(args, ref_dataset, pred_data, all_wer):
     breakdown_results.update()
     # breakdown to projects
     # load logging csv
-    logging_path = "results/benchmark_breakdown.csv"
+    logging_path = "mls_results/benchmark_breakdown.csv"
     try:
         logging_csv = pd.read_csv(logging_path)
         logging_csv = logging_csv.append(breakdown_results, ignore_index=True)

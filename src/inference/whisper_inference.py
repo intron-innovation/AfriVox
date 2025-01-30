@@ -1,7 +1,7 @@
 import os
-data_home = "data7"
-os.environ["HF_HOME"] = f"/{data_home}/.cache/"
-os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
+# data_home = "data7"
+# os.environ["HF_HOME"] = f"/{data_home}/.cache/"
+# os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 import torch
 import whisper
 import numpy as np
@@ -16,15 +16,16 @@ print(device)
 
 
 def load_whisper_and_processor(args):
+    language = args.language if args.language else 'en'
     try:
-        processor = WhisperProcessor.from_pretrained(args.model_id_or_path, language='en')
+        processor = WhisperProcessor.from_pretrained(args.model_id_or_path, language=language)
     except Exception as e:
         processor = WhisperProcessor.from_pretrained(
             os.path.dirname(args.model_id_or_path)
         )
     if args.lora == "True" and "whisper" in args.model_id_or_path:
         peft_config = PeftConfig.from_pretrained(args.model_id_or_path)
-        processor = WhisperProcessor.from_pretrained(args.model_id_or_path,  language='en')
+        processor = WhisperProcessor.from_pretrained(args.model_id_or_path,  language=language)
         model = WhisperForConditionalGeneration.from_pretrained(
         peft_config.base_model_name_or_path, load_in_8bit=True, device_map=device,
         )
@@ -32,18 +33,18 @@ def load_whisper_and_processor(args):
         model = PeftModel.from_pretrained(model, args.model_id_or_path)
         model.config.use_cache = True
         model.generation_config.suppress_tokens = []
-        model.generation_config.language = "en"
+        model.generation_config.language = language
         model.config.forced_decoder_ids = processor.tokenizer.get_decoder_prompt_ids(
-        language='en', task='transcribe'
+        language=language, task='transcribe'
         )
     elif "whisper" in args.model_id_or_path:
         # load model and processor
         model = WhisperForConditionalGeneration.from_pretrained(args.model_id_or_path)
         model.config.use_cache = True
         model.generation_config.suppress_tokens = []
-        model.generation_config.language = "en"
+        model.generation_config.language = language
         model.config.forced_decoder_ids = processor.tokenizer.get_decoder_prompt_ids(
-        language='en', task='transcribe'
+        language=language, task='transcribe'
         )
     elif "whisper" in args.model_id_or_path:
         whisper_model = args.model_id_or_path.split("_")[1]

@@ -3,7 +3,7 @@ import jiwer
 import string
 import os
 from openai import OpenAI
-from whisper.normalizers import EnglishTextNormalizer
+from whisper.normalizers import EnglishTextNormalizer, BasicTextNormalizer
 
 
 clinical = ["General-Clinical", "Clinical-Surgery", "Talk-Very-Fast-Clinical", 
@@ -228,7 +228,7 @@ def gpt4_correcter(text):
             )
     return response.choices[0].message.content.strip()
             
-def post_process_preds(data, correct=False):
+def post_process_preds(data, correct=False, non_english=True):
     assert "hypothesis" in data.columns
     assert "reference" in data.columns
 
@@ -258,7 +258,7 @@ def post_process_preds(data, correct=False):
                 llm_wer = jiwer.wer(list(data["reference"]), list(data["pred_llm"]))
                 print(f"Autocorrect WER: {llm_wer * 100:.2f} %")
             
-    normalizer = EnglishTextNormalizer()
+    normalizer = BasicTextNormalizer() if non_english else EnglishTextNormalizer() 
     pred_normalized = [normalizer(text) for text in data["hypothesis"]]
     gt_normalized = [normalizer(text) for text in data["reference"]]
 
@@ -266,7 +266,7 @@ def post_process_preds(data, correct=False):
     gt_normalized = [text if text != "" else "abcxyz" for text in gt_normalized]
 
     whisper_wer = jiwer.wer(gt_normalized, pred_normalized)
-    print(f"EnglishTextNormalizer WER: {whisper_wer * 100:.2f} %")
+    print(f"TextNormalizer WER: {whisper_wer * 100:.2f} %")
 
     data["hypothesis_clean"] = [normalizer(text) for text in data["hypothesis"]]
     data["reference_clean"] = [normalizer(text) for text in data["reference"]]

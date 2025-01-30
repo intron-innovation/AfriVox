@@ -2,7 +2,9 @@
 
 
 
-models_list=("openai/whisper-small" \ 
+models_list=("openai/whisper-medium" \ 
+             "openai/whisper-large-v3" \
+             "openai/whisper-large-v3-turbo"
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_medium_afrispeech_1e_lora/checkpoints" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_1e_lora/checkpoints" \
             #"/data4/abraham/training_with_new_sampler/AfriSpeech-Dataset-Paper/src/experiments/whisper_small_afrispeech_1e/checkpoints" \
@@ -20,8 +22,15 @@ models_list=("openai/whisper-small" \
 #model="/data3/saved_models/facebook_wav2vec_checkpoint-190575"
 
 
-csv_paths=("data/intron_transcribe_clinical_1108_production_test_set_26_jan_2024_local.csv") #data/val_9aug23_43432-all_data_augs_procs_filtered-42934-clean-samplecols.csv"  "data/intron-dev-public-3231-clean.csv" "data/intron-test-public-6346-clean.csv" "data/intron_fresh_audio-test-prod-2023_09_14_23_33_24_496601_local.csv" "data/personalizations_2023-07-25_local.csv") # List of CSV paths
-audio_paths=("/data4/data/prod2/") #"/data4/data/"  "/data4/data/intron/" "/data4/data/intron/" "/data4/data/prod/" "/data4/data/personalize_audio2/") # List of audio paths
+csv_paths=("/home/busayo/busayo/mls_benchmark/open_source_language_csv_files/amharic.csv" \ 
+            "/home/busayo/busayo/mls_benchmark/open_source_language_csv_files/arabic.csv" \ 
+            "/home/busayo/busayo/mls_benchmark/open_source_language_csv_files/french.csv" \ 
+             "/home/busayo/busayo/mls_benchmark/open_source_language_csv_files/hausa.csv" \ 
+             "/home/busayo/busayo/mls_benchmark/open_source_language_csv_files/shona.csv" \
+            "/home/busayo/busayo/mls_benchmark/open_source_language_csv_files/swahili.csv" \ 
+            "/home/busayo/busayo/mls_benchmark/open_source_language_csv_files/yoruba.csv") 
+            #data/val_9aug23_43432-all_data_augs_procs_filtered-42934-clean-samplecols.csv"  "data/intron-dev-public-3231-clean.csv" "data/intron-test-public-6346-clean.csv" "data/intron_fresh_audio-test-prod-2023_09_14_23_33_24_496601_local.csv" "data/personalizations_2023-07-25_local.csv") # List of CSV paths
+audio_paths=("/") #"/data4/data/"  "/data4/data/intron/" "/data4/data/intron/" "/data4/data/prod/" "/data4/data/personalize_audio2/") # List of audio paths
     
 
 for model in ${models_list[@]}; 
@@ -29,10 +38,11 @@ for model in ${models_list[@]};
 
     for ((i=0; i<${#csv_paths[@]}; i++)); do
         csv_path="${csv_paths[$i]}"
+        language="$(basename "$csv_path" | cut -d. -f1)"
         audio_path="${audio_paths[$i]}"
-        echo $csv_path $model 
-        CUDA_VISIBLE_DEVICES=1 python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 1 \
-            --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  --lora False
+        echo $csv_path $model $language
+        CUDA_VISIBLE_DEVICES=0 python3 src/inference/infer_long_audios.py --audio_dir $audio_path --gpu 0 \
+            --model_id_or_path $model --data_csv_path $csv_path --batchsize 8  --lora False --language $language
     done
 done
 echo benchmarking done

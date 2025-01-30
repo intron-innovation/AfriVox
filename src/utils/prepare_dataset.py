@@ -1,6 +1,6 @@
 import os
-os.environ['HF_HOME'] = '/data7/.cache/'
-os.environ['XDG_CACHE_HOME'] = '/data4/.cache/'
+# os.environ['HF_HOME'] = '/data7/.cache/'
+# os.environ['XDG_CACHE_HOME'] = '/data4/.cache/'
 import logging
 import time
 import json

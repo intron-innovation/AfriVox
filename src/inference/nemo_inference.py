@@ -1,7 +1,7 @@
 import os
-data_home = "data7"
-os.environ["HF_HOME"] = f"/{data_home}/.cache/"
-os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
+# data_home = "data7"
+# os.environ["HF_HOME"] = f"/{data_home}/.cache/"
+# os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
 from typing import Union, List
 import pandas as pd
 from tqdm import tqdm

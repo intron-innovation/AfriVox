@@ -34,7 +34,7 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
             result = batched_whisper_inference(fpath_wav, model_, processor_, max_len_secs=20)
         else:
             raise NotImplementedError(f"{args_.model_id_or_path} not supported")
-        results.append([example.audio_id, fpath_wav, example.text, result])
+        results.append([example.audio_ids, fpath_wav, example.text, result])
         if debug:
             print(f"{args_.model_id_or_path} decoding {fpath_wav} done in {time.time() - start:.4f}s")
     results_ = pd.DataFrame(results, columns=['audio_id', 'audio_path', 'reference', 'hypothesis'])
@@ -76,8 +76,9 @@ if __name__ == "__main__":
     dataset = dataset[dataset["audio_path"].apply(os.path.exists)]
 
     results = infer_long_examples(dataset, args, model, processor)
-    all_wer = post_process_preds(results)
-    write_pred_inference_df(args.model_id_or_path, results, all_wer, split=split, source=source)
+    non_english = args.language != 'english'
+    all_wer = post_process_preds(results, non_english=non_english)
+    write_pred_inference_df(args.model_id_or_path, results, all_wer, language=args.language, split="full_test", source=source)
 
     time_elapsed = int(round(time.time())) - tsince
     print(
