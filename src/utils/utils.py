@@ -49,7 +49,7 @@ def write_pred_inference_df(model_id_or_path, predictions_df, wer, output_dir=".
         model_id_or_path = model_id_or_path.replace("/", "-").split("AfriSpeech-Dataset-Paper-src-experiments")[-1]
     
     wer_string = "_".join(f"{source}_{round(wer, 4)}" for source, wer in wer.items())
-    output_path = f"{output_dir}/african-accented-english-{wer_string}-{len(predictions_df)}.csv"
+    output_path = f"{output_dir}/{model_id_or_path}-african-accented-english-{wer_string}-{len(predictions_df)}.csv"
 
     
     predictions_df.to_csv(output_path, index=False)
