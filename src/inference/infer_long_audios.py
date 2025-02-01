@@ -39,10 +39,10 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
         else:
             raise NotImplementedError(f"{args_.model_id_or_path} not supported")
         # results.append([example.audio_id, fpath_wav, example.text, result])
-        results.append([fpath_wav, example.text, result])
+        results.append([fpath_wav, example.text, result, example.source])
         if debug:
             print(f"{args_.model_id_or_path} decoding {fpath_wav} done in {time.time() - start:.4f}s")
-    results_ = pd.DataFrame(results, columns=['audio_path', 'reference', 'hypothesis'])
+    results_ = pd.DataFrame(results, columns=['audio_path', 'reference', 'hypothesis', 'source'])
 
     return results_
 
@@ -78,6 +78,7 @@ if __name__ == "__main__":
     
     assert "audio_path" in dataset.columns
     assert "text" in dataset.columns
+    assert "source" in dataset.columns
     dataset = correct_audio_paths(dataset, args.audio_dir, split)
     dataset = dataset[dataset["audio_path"].apply(os.path.exists)]
     # dataset = dataset.iloc[:10]
