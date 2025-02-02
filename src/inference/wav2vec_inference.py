@@ -29,8 +29,8 @@ def load_wav2vec_and_processor(args):
     )
     model = AutoModelForCTC.from_pretrained(args.model_id_or_path)
     if "mms" in args.model_id_or_path:
-        processor.tokenizer.set_target_lang(args.language)
-        model.load_adapter(args.language)
+        processor.tokenizer.set_target_lang()
+        model.load_adapter(args.lang_code)
     return model, processor
 
 

@@ -7,7 +7,7 @@ import os
 import soundfile as sf
 
 from src.utils.audio_processing import load_audio_file, split_audio_full, get_byte_chunks, bytes_to_array
-from src.utils.text_processing import clean_text
+from src.utils.text_processing import clean_text, clean_multilingual_text
 device = torch.device("cuda" if (torch.cuda.is_available()) else "cpu")
 from transformers import AutoProcessor, Wav2Vec2ProcessorWithLM
 lm = None
@@ -210,7 +210,7 @@ def predict_whisper(speech, model, processor, use_lm=False):
         pred_ids = model.generate(input_features)
     predicted_transcription = processor.batch_decode(pred_ids, skip_special_tokens=True)
     if predicted_transcription:
-        predicted_transcription = clean_text(predicted_transcription[0])
+        predicted_transcription = clean_multilingual_text(predicted_transcription[0])
         if use_lm:
             predicted_transcription = lm.FixFragment(predicted_transcription)
 

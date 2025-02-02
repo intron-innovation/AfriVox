@@ -61,7 +61,13 @@ def clean_text(text):
     text = re.sub(r"[^a-zA-Z0-9\s\.\,\-\?\:\'\/\(\)\[\]\+\%]", '', text)
     return text
 
+def clean_multilingual_text(text):
+    normalizer = BasicTextNormalizer()
+    return normalizer(text)
 
+# def clean_multilingual_text(text):
+#     chars_to_remove = '[\\?\\🤔民…]'
+#     return re.sub(chars_to_remove, '', text).lower().strip()
 
 
 def clean_text_ner(text):
@@ -232,15 +238,18 @@ def post_process_preds(data, correct=False, non_english=True):
     assert "hypothesis" in data.columns
     assert "reference" in data.columns
 
-    pred_clean = [clean_text(text) for text in data["hypothesis"]]
-    ref_clean = [clean_text(text) for text in data["reference"]]
+    if non_english:
+        pred_clean = [clean_multilingual_text(str(text)) for text in data["hypothesis"]]
+        ref_clean = [clean_multilingual_text(str(text)) for text in data["reference"]]
+    else:
+        pred_clean = [clean_text(str(text)) for text in data["hypothesis"]]
+        ref_clean = [clean_text(str(text)) for text in data["reference"]]
 
     pred_clean = [text if text != "" else "abcxyz" for text in pred_clean]
     ref_clean = [text if text != "" else "abcxyz" for text in ref_clean]
 
     data["pred_clean"] = pred_clean
     data["ref_clean"] = ref_clean
-
     data["wer"] = data.apply(
         lambda row: jiwer.wer(row["ref_clean"], row["pred_clean"]), axis=1
     )
@@ -258,10 +267,16 @@ def post_process_preds(data, correct=False, non_english=True):
                 llm_wer = jiwer.wer(list(data["reference"]), list(data["pred_llm"]))
                 print(f"Autocorrect WER: {llm_wer * 100:.2f} %")
             
-    normalizer = BasicTextNormalizer() if non_english else EnglishTextNormalizer() 
-    pred_normalized = [normalizer(text) for text in data["hypothesis"]]
-    gt_normalized = [normalizer(text) for text in data["reference"]]
-
+    try:
+        normalizer = BasicTextNormalizer() if non_english else EnglishTextNormalizer()
+        pred_normalized = [normalizer(text) for text in data["hypothesis"]]
+        gt_normalized = [normalizer(text) for text in data["reference"]]
+    except Exception as e:
+        print(f"Error during normalization: {e}")
+        print(data["hypothesis"])
+        print(data['reference'])       
+        import sys
+        sys.exit()
     pred_normalized = [text if text != "" else "abcxyz" for text in pred_normalized]
     gt_normalized = [text if text != "" else "abcxyz" for text in gt_normalized]
 

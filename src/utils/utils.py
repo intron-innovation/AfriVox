@@ -106,7 +106,10 @@ def parse_argument():
         "--output_dir", type=str, default="./results", help="directory to store results"
     )
     parser.add_argument(
-        "--language", type=str, default="en", help="the language code for the dataset"
+        "--language", type=str, default="en", help="the language for the dataset"
+    )
+    parser.add_argument(
+        "--lang_code", type=str, default="en", help="the language code for the dataset"
     )
     parser.add_argument(
         "--max_audio_len_secs",

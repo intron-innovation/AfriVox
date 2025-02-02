@@ -66,15 +66,15 @@ if __name__ == "__main__":
     model = model.to(device)
 
     dataset = pd.read_csv(args.data_csv_path)
+    dataset = dataset[dataset.language == args.language]#.head(2)
     if "audio_paths" in dataset.columns:
         dataset = dataset.rename(columns={"audio_paths":"audio_path"})
-
     
     assert "audio_path" in dataset.columns
     assert "text" in dataset.columns
     dataset = correct_audio_paths(dataset, args.audio_dir, split)
+    dataset['audio_path'] = dataset['audio_path'].apply(lambda x: "/home/busayo/busayo/mls_benchmark/" + x)
     dataset = dataset[dataset["audio_path"].apply(os.path.exists)]
-
     results = infer_long_examples(dataset, args, model, processor)
     non_english = args.language != 'english'
     all_wer = post_process_preds(results, non_english=non_english)
