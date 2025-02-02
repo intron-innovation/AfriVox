@@ -1,4 +1,4 @@
-# asr_benchmarking
+# Multilingual ASR benchmarking
 Benchmarking for multiple multilingual ASR model families on curated african speech testsets.
 
 ## Installation and Running Benchmarks
