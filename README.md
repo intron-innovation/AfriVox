@@ -1,5 +1,5 @@
 # asr_benchmarking
-Benchmarking for multiple ASR model families on intron relevant data.
+Benchmarking for multiple multilingual ASR model families on curated african speech testsets.
 
 ## Installation and Running Benchmarks
 
@@ -10,7 +10,7 @@ This guide will take you through the steps of installing the necessary requireme
 Start by cloning the repository to your local machine:
 
 ```bash
-git clone https://github.com/intron-innovation/asr_benchmarking.git
+git clone https://github.com/intron-innovation/AfriVox.git -b multilingual_speech
 ```
 
 ## Step 2: Install Requirements
@@ -25,7 +25,7 @@ conda activate benchmark
 Otherwise, create a new environment and ensure you install all necessary dependencies by running:
 
 ```bash
-cd asr_benchmarking
+cd AfriVox
 conda create -n benchmark python=3.10
 conda activate benchmark
 
@@ -42,8 +42,7 @@ Open `run_benchmark.sh` and set the model variable:
 model=<model_name_or_path>
 ```
 
-Replace `<model_name_or_path>` with the actual name or path to your model. 
-After doing this, ensure to edit `audio_paths` in the configuration from `/data4` to reflect the correct mount point or directory where your dataset is located on your device.
+Replace `<model_name_or_path>` with the actual name or path to your model.
 
 ## Step 4: Run the Benchmark
 
