@@ -1,5 +1,8 @@
-# Multilingual ASR benchmarking
-Benchmarking for multiple multilingual ASR model families on curated african speech testsets.
+# AfriVox
+Benchmarking unimodal ASR and multimodal audio language models on:
+1. African-accented English Speech (AES)
+2. Multilingual Speech (MLS)
+
 
 ## Installation and Running Benchmarks
 
@@ -7,25 +10,20 @@ This guide will take you through the steps of installing the necessary requireme
 
 ## Step 1: Clone the Repository
 
-Start by cloning the repository to your local machine:
+Start by cloning the repository to your local machine and adding it to your pythonpath.
 
 ```bash
 git clone https://github.com/intron-innovation/AfriVox.git -b multilingual_speech
+cd AfriVox
+export PYTHONPATH=$(pwd):$PYTHONPATH
 ```
 
 ## Step 2: Install Requirements
 
-Check existing environments on your machine using `conda evn list` to avoid duplicating an existing environment.
-If the `benchmark` env exists, activate it using:
+Create a new environment and ensure you install all necessary dependencies by running:
 
 ```bash
-conda activate benchmark
-```
-
-Otherwise, create a new environment and ensure you install all necessary dependencies by running:
-
-```bash
-cd AfriVox
+cd asr_benchmarking
 conda create -n benchmark python=3.10
 conda activate benchmark
 
@@ -36,19 +34,19 @@ pip install -r requirements.txt
 ## Step 3: Set Model Name/Path
 
 Before running the benchmark, you need to specify the model name or path in the script. 
-Open `run_benchmark.sh` and set the model variable:
+Open `run_benchmark.sh` and set the model you want to benchmark, the path to the data index and the directory where the audios are stored.
+
 
 ```bash
-model=<model_name_or_path>
+models_list=<add models to this list>
+csv_paths=(path_to_data_index.csv)
+audio_dir=("/data")
 ```
-
-Replace `<model_name_or_path>` with the actual name or path to your model.
 
 ## Step 4: Run the Benchmark
 
-With the model set up, you can now run the benchmark script:
+With the model set up, you can now run the benchmark script from the AfriVox directory:
 
 ```bash
 bash src/inference/run_benchmark.sh
 ```
-
