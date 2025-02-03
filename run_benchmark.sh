@@ -2,17 +2,22 @@
 
 # List of models to iterate through
 models_list=(
-    "openai/whisper-medium"
-    # "openai/whisper-large-v3"
+    # "openai/whisper-medium"
+    "openai/whisper-large-v3"
     # "openai/whisper-large-v3-turbo"
+    # "facebook/mms-1b-all"
 )
 
 # Manually specified list of languages to process
-languages=("afrikaans" "french" "hausa" "shona" "swahili")
+# languages=("afrikaans" "arabic" "yoruba" "amharic" "french" "hausa" "shona" "swahili")
+languages=("amharic")
 
 # Dictionary mapping each language to its corresponding language code
 declare -A lang_map=(
     ["afrikaans"]="afr"
+    ["arabic"]="ara"
+    ["yoruba"]="yor"
+    ["amharic"]="amh"
     ["french"]="fra"
     ["hausa"]="hau"
     ["shona"]="sna"
