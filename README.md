@@ -17,7 +17,7 @@ from google.colab import auth
 auth.authenticate_user()
 
 !gcloud auth login
-!gcloud storage cp gs://your-bucket-name/your-file-name .
+!gcloud storage cp -r gs://unimodal-benchmark-data/data .
 ```
 
 ## Installation and Running Benchmarks
