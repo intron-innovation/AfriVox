@@ -3,6 +3,22 @@ Benchmarking unimodal ASR and multimodal audio language models on:
 1. African-accented English Speech (AES)
 2. Multilingual Speech (MLS)
 
+## Data
+The data is stored in a Google Cloud Storage (GCS) bucket. To download:
+
+``bash
+gcloud auth login
+gcloud storage cp -r gs://unimodal-benchmark-data/data .
+```
+
+If working on google colab:
+```python
+from google.colab import auth
+auth.authenticate_user()
+
+!gcloud auth login
+!gcloud storage cp gs://your-bucket-name/your-file-name .
+```
 
 ## Installation and Running Benchmarks
 
