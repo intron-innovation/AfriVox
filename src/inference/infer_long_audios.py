@@ -81,11 +81,13 @@ if __name__ == "__main__":
     assert "source" in dataset.columns
     dataset = correct_audio_paths(dataset, args.audio_dir, split)
     dataset = dataset[dataset["audio_path"].apply(os.path.exists)]
-    # dataset = dataset.iloc[:10]
+    # dataset = dataset.groupby('source', group_keys=False).apply(lambda x: x.sample(min(2, len(x))))
     print(f'New length of the dataset is {len(dataset)}')
     print('calling inference ------------------------------------')
     results = infer_long_examples(dataset, args, model, processor)
     # print(results)
+    model_name = args.model_id_or_path.replace("/", "-").split("AfriSpeech-Dataset-Paper-src-experiments")[-1]
+    results.to_csv(f'{model_name}_temp.csv', index=False)
     all_wer = post_process_preds(results)
     write_pred_inference_df(args.model_id_or_path, results, all_wer, split=split, source=source)
 

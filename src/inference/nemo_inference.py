@@ -15,12 +15,12 @@ from nemo_text_processing.inverse_text_normalization.inverse_normalize import In
 
 tqdm.pandas()
 ctc = ['conformer', 'ctc', 'parakeet']
-rnnt = ['rnnt']
+rnnt = ['rnnt', 'tdt']
 mtl = ['canary']
 
 model_mapping = {
     'ctc': nemo_asr.models.EncDecCTCModelBPE,
-    'rnnt':  nemo_asr.models.EncDecRNNTBPEModel,
+    'rnnt': nemo_asr.models.EncDecRNNTBPEModel,
     'mtl': nemo_asr.models.EncDecMultiTaskModel,
 }
 inverse_normalizer = InverseNormalizer(lang='en')
