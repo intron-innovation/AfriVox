@@ -6,7 +6,7 @@ Benchmarking unimodal ASR and multimodal audio language models on:
 ## Data
 The data is stored in a Google Cloud Storage (GCS) bucket. To download:
 
-``bash
+```bash
 gcloud auth login
 gcloud storage cp -r gs://unimodal-benchmark-data/data .
 ```
