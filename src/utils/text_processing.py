@@ -234,8 +234,8 @@ def post_process_preds(data, correct=False):
     assert "source" in data.columns 
 
     # Clean text
-    data["pred_clean"] = [clean_text(text) if text else "abcxyz" for text in data["hypothesis"]]
-    data["ref_clean"] = [clean_text(text) if text else "abcxyz" for text in data["reference"]]
+    data["pred_clean"] = [clean_text(str(text)).strip() if clean_text(str(text)).strip() else "abcxyz" for text in data["hypothesis"]]
+    data["ref_clean"] = [clean_text(str(text)).strip() if clean_text(str(text)).strip() else "abcxyz" for text in data["reference"]]
 
     # Calculate WER per 'source'
     wer_per_source = {}
