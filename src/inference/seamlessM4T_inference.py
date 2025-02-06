@@ -1,0 +1,91 @@
+import os
+# data_home = "data7"
+# os.environ["HF_HOME"] = f"/{data_home}/.cache/"
+# os.environ["XDG_CACHE_HOME"] = f"/{data_home}/.cache/"
+import torch
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
+from peft import PeftModel, PeftConfig
+from transformers import AutoProcessor, SeamlessM4Tv2Model, SeamlessM4Tv2ForSpeechToText, SeamlessM4TForSpeechToText
+
+device = torch.device("cuda" if (torch.cuda.is_available()) else "cpu")
+print(device)
+
+
+def load_seamless_m4t_and_processor(args):
+    language = args.language if args.language else 'en'
+    try:
+        processor = AutoProcessor.from_pretrained(args.model_id_or_path)
+    except Exception as e:
+        processor = AutoProcessor.from_pretrained(
+            os.path.dirname(args.model_id_or_path)
+        )
+    if args.lora == "True" and "seamless-m4t" in args.model_id_or_path:
+        peft_config = PeftConfig.from_pretrained(args.model_id_or_path)
+        processor = AutoProcessor.from_pretrained(args.model_id_or_path)
+        model = SeamlessM4Tv2ForSpeechToText.from_pretrained(
+        peft_config.base_model_name_or_path, load_in_8bit=True, device_map=device,
+        )
+        
+        model = PeftModel.from_pretrained(model, args.model_id_or_path)
+        model.config.use_cache = False
+        model.generation_config.suppress_tokens = []
+        model.generation_config.language = language
+        model.generation_config.tgt_lang = language
+        model.config.forced_decoder_ids = None#processor.tokenizer.get_decoder_prompt_ids(language=language, task='transcribe')
+    elif "seamless-m4t-v2" in args.model_id_or_path:
+        # load model and processor
+        model = SeamlessM4Tv2ForSpeechToText.from_pretrained(args.model_id_or_path)
+        model.config.use_cache = False
+        model.generation_config.suppress_tokens = []
+        model.generation_config.language = language
+        model.generation_config.tgt_lang = language
+        model.config.forced_decoder_ids = None #processor.tokenizer.get_decoder_prompt_ids(language=language, task='transcribe')
+        model.generation_config.task = 'transcribe'
+    elif "seamless-m4t" in args.model_id_or_path:
+        # load model and processor
+        model = SeamlessM4TForSpeechToText.from_pretrained(args.model_id_or_path)
+        model.config.use_cache = False
+        model.generation_config.suppress_tokens = []
+        model.generation_config.language = language
+        model.generation_config.tgt_lang = language
+        model.config.forced_decoder_ids = None #processor.tokenizer.get_decoder_prompt_ids(language=language, task='transcribe')
+        model.generation_config.task = 'transcribe'
+    else:
+        raise NotImplementedError(f"seamlessM4T model {args.model_id_or_path} not supported")
+    return model, processor
+
+
+def transcribe_seamless_m4t(model, processor, loader, tgt_lang):
+
+    hypotheses = []
+    references = []
+    paths = []
+    accents = []
+    sample_ids = []
+
+    for audio_or_mels, texts, audio_path, accent, domain, vad, sample_id in tqdm(
+        loader
+    ):
+        audio_or_mels = audio_or_mels.to(device, non_blocking=True)
+        with torch.no_grad():
+            pred_ids = model.generate(audio_or_mels, tgt_lang=tgt_lang)
+        results = processor.batch_decode(pred_ids[0], skip_special_tokens=True)
+
+        hypotheses.extend(results)
+        references.extend(texts)
+        paths.extend(audio_path)
+        accents.extend(accent)
+        sample_ids.extend(sample_id)
+
+    data = pd.DataFrame(
+        dict(
+            hypothesis=hypotheses,
+            reference=references,
+            audio_paths=paths,
+            accent=accents,
+            sample_id=sample_ids,
+        )
+    )
+    return data

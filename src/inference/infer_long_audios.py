@@ -6,14 +6,15 @@ import os
 from src.inference.nemo_inference import load_nemo_models
 from src.inference.wav2vec_inference import load_wav2vec_and_processor
 from src.inference.whisper_inference import load_whisper_and_processor
-from src.utils.batched_inference_utils import stream_audio, batched_whisper_inference
+from src.inference.seamlessM4T_inference import load_seamless_m4t_and_processor
+from src.utils.batched_inference_utils import stream_audio, batched_whisper_inference, batched_seamless_m4t_inference
 from src.utils.text_processing import post_process_preds
 from src.utils.utils import parse_argument, write_pred_inference_df, get_split, correct_audio_paths
 
 
 WAV2VEC2_MODELS = ['mms', 'wav2vec', 'w2v', 'robust']
 NEMO_MODELS = ['nemo', 'nvidia', 'parakeet']
-SUPPORTED_MODELS = WAV2VEC2_MODELS + ['whisper'] + NEMO_MODELS
+SUPPORTED_MODELS = WAV2VEC2_MODELS + ['whisper'] + NEMO_MODELS + ['seamless']
 
 gc.collect()
 torch.cuda.empty_cache()
@@ -26,18 +27,21 @@ def infer_long_examples(dataset_, args_, model_, processor_=None, debug=False):
         if any(sub in args_.model_id_or_path for sub in WAV2VEC2_MODELS):
             result = stream_audio(fpath_wav, model_, processor_, context_length_secs=15, use_lm=False)
         elif any(sub in args_.model_id_or_path for sub in NEMO_MODELS):
-            result = model_.transcribe([fpath_wav])[0]
+            result = model_.transcribe(audio=fpath_wav, task='asr', source_lang=args_.lang_code, target_lang=args_.lang_code, pnc='True')
             # result = batched_nemo_inference(fpath_wav, model_, max_len_secs=20)
             if type(result) == list:
                 result = result[0]
         elif "whisper" in args_.model_id_or_path:
             result = batched_whisper_inference(fpath_wav, model_, processor_, max_len_secs=20)
+        elif "seamless" in args_.model_id_or_path:
+            tgt_lang = args_.lang_code
+            result = batched_seamless_m4t_inference(fpath_wav, model_, processor_, tgt_lang, max_len_secs=20)
         else:
             raise NotImplementedError(f"{args_.model_id_or_path} not supported")
-        results.append([example.audio_ids, fpath_wav, example.text, result])
+        results.append([example.audio_ids, fpath_wav, example.text, result, example.source])
         if debug:
             print(f"{args_.model_id_or_path} decoding {fpath_wav} done in {time.time() - start:.4f}s")
-    results_ = pd.DataFrame(results, columns=['audio_id', 'audio_path', 'reference', 'hypothesis'])
+    results_ = pd.DataFrame(results, columns=['audio_id', 'audio_path', 'reference', 'hypothesis', 'source'])
 
     return results_
 
@@ -61,6 +65,8 @@ if __name__ == "__main__":
         model, processor = load_wav2vec_and_processor(args)
     elif any(sub in args.model_id_or_path for sub in NEMO_MODELS):
         model, processor = load_nemo_models(args)
+    elif "seamless-m4t" in args.model_id_or_path:
+        model, processor = load_seamless_m4t_and_processor(args)
     else:
         raise NotImplementedError(f"model {args.model_id_or_path} or dataset {args.data_csv_path} not supported")
     model = model.to(device)
@@ -72,6 +78,7 @@ if __name__ == "__main__":
     
     assert "audio_path" in dataset.columns
     assert "text" in dataset.columns
+    assert "source" in dataset.columns
     dataset = correct_audio_paths(dataset, args.audio_dir, split)
     # dataset['audio_path'] = dataset['audio_path'].apply(lambda x: "/home/busayo/busayo/mls_benchmark/" + x)
     dataset = dataset[dataset["audio_path"].apply(os.path.exists)]
