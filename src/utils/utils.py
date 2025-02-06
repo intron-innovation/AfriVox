@@ -33,7 +33,7 @@ def write_pred(model_id_or_path, results, wer, cols=None, output_dir="./results"
     return predictions_df
 
 
-def write_pred_inference_df(model_id_or_path, predictions_df, wer, language, output_dir="./mls_results", split="dev", source="normal"):
+def write_pred_inference_df(model_id_or_path, predictions_df, wer, language, output_dir="./results", split="dev", source="normal"):
     """
     Write model predictions to file
     :param cols: List[str]
