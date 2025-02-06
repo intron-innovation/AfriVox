@@ -7,10 +7,12 @@ models_list=(
     "facebook/mms-1b-all"
 )
 
-# languages=("amharic" "arabic" "french" "fulani" "hausa" "igbo" "kinyarwanda" "luganda" "pedi" "shona" "swahili" "xhosa" "yoruba" "zulu" )
-languages=( "shona" "swahili" "xhosa" "yoruba" "zulu" )
+# languages=("afrikaans"  "akan" "amharic" "arabic" "french" "fulani" "hausa" "igbo" "kinyarwanda" "luganda" "pedi" "shona" "swahili" "xhosa" "yoruba" "zulu" )
+languages=( "twi")
 # Dictionary mapping each language to its corresponding language code
 declare -A lang_map=(
+    ["afrikaans"]="afr"
+    ["twi"]="aka"
     ["amharic"]="amh"
     ["arabic"]="ara"
     ["french"]="fra"
@@ -22,6 +24,7 @@ declare -A lang_map=(
     ["pedi"]="nso"
     ["shona"]="sna"
     ["swahili"]="swh"
+    ["twi"]="aka"
     ["xhosa"]="xho"
     ["yoruba"]="yor"
     ["zulu"]="zul"
