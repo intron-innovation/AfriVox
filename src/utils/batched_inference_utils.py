@@ -5,6 +5,7 @@ import time
 import torch
 import os
 import soundfile as sf
+import sys
 
 from src.utils.audio_processing import load_audio_file, split_audio_full, get_byte_chunks, bytes_to_array
 from src.utils.text_processing import clean_text, clean_multilingual_text
@@ -158,11 +159,16 @@ def set_args(audio_config, context_length_secs=5):
 
 
 def stream_audio(audio_path, wv_model, w2v_processor, context_length_secs=5, use_onnx=False, use_lm=False):
-    audio_q, audio_config = get_byte_chunks(audio_path)
-
+    try:    
+        audio_q, audio_config = get_byte_chunks(audio_path)
+    except Exception as e:
+        # Assuming `audio_path` holds the path to the audio file being processed.
+        print(f"Error processing audio file: {audio_path}\nError: {e}")
+        # Optionally, break or re-raise the exception to stop execution.
+        raise
     # set args
     frame_chunks, stride_logits_size, context_length = set_args(audio_config, context_length_secs)
-
+    
     l_stride = r_stride = None
     offset = 0
     pred_q = []
@@ -200,6 +206,21 @@ def stream_audio(audio_path, wv_model, w2v_processor, context_length_secs=5, use
 
     return transcript
 
+def predict_seamless_m4t(speech, model, processor, tgt_lang, use_lm=False):
+    input_features = processor(audios=speech, sampling_rate=16000,
+                                 return_tensors="pt").input_features
+    input_features = input_features.to(device)#.half()
+    
+    with torch.no_grad():
+        pred_ids = model.generate(input_features, tgt_lang=tgt_lang)
+    predicted_transcription = processor.batch_decode(pred_ids[0], skip_special_tokens=True)
+    predicted_transcription = " ".join(predicted_transcription)
+    if predicted_transcription:
+        predicted_transcription = clean_multilingual_text(predicted_transcription)
+        if use_lm:
+            predicted_transcription = lm.FixFragment(predicted_transcription)
+
+    return predicted_transcription
 
 def predict_whisper(speech, model, processor, use_lm=False):
     input_features = processor(speech, sampling_rate=16000,
@@ -224,6 +245,21 @@ def batched_whisper_inference(audio_path, model, processor, max_len_secs=15, use
     transcripts = []
     for i, speech in enumerate(tqdm(chunks)):
         predicted_transcription = predict_whisper(speech, model, processor, use_lm=use_lm)
+        transcripts.append(predicted_transcription)
+        if debug:
+            print(f"chunk {i} len {len(speech)} -> {predicted_transcription}")
+
+    transcripts = " ".join(transcripts)
+    print(f"decoding done in {time.time() - start:.4f}s")
+    return transcripts
+
+def batched_seamless_m4t_inference(audio_path, model, processor, tgt_lang, max_len_secs=15, use_lm=False, debug=False):
+    start = time.time()
+    chunks = split_audio_full(audio_path, max_len_secs=max_len_secs, sampling_rate=16000)
+    print(f"num chunks: {len(chunks)}, idx 0 shape= {chunks[0].shape}")
+    transcripts = []
+    for i, speech in enumerate(tqdm(chunks)):
+        predicted_transcription = predict_seamless_m4t(speech, model, processor, tgt_lang, use_lm=use_lm)
         transcripts.append(predicted_transcription)
         if debug:
             print(f"chunk {i} len {len(speech)} -> {predicted_transcription}")
