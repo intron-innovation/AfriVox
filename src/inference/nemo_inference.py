@@ -21,7 +21,7 @@ mtl = ['canary']
 model_mapping = {
     'ctc': nemo_asr.models.EncDecCTCModelBPE,
     'rnnt':  nemo_asr.models.EncDecRNNTBPEModel,
-    'mtl': None # nemo_asr.models.EncDecMultiTaskModel,
+    'mtl': nemo_asr.models.EncDecMultiTaskModel,
 }
 inverse_normalizer = InverseNormalizer(lang='en')
 
@@ -82,13 +82,13 @@ class IntronNemo():
         self.model = self.model.to(device)
         return self
 
-    def transcribe(self, paths2audio_files: List[str], **kwargs):
+    def transcribe(self, paths2audio_files: List[str], language: str, **kwargs):
         """
         Transcribe audio files to text using the model and custom decoder.
         """
         if not all(os.path.exists(path) for path in paths2audio_files):
             raise FileNotFoundError("One or more audio files do not exist.")
-        logits = self.model.transcribe(paths2audio_files=paths2audio_files, logprobs=True, **kwargs)
+        logits = self.model.transcribe(paths2audio_files=paths2audio_files, source_lang=language, target_lang=language, logprobs=True, **kwargs)
         predictions = [self.decoder.decode(item) for item in logits]
         return predictions
 
