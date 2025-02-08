@@ -24,7 +24,7 @@ auth.authenticate_user()
 
 This guide will take you through the steps of installing the necessary requirements and running the benchmarks for the model.
 
-## Step 1: Clone the Repository
+### Step 1: Clone the Repository
 
 Start by cloning the repository to your local machine and adding it to your pythonpath.
 
@@ -34,7 +34,7 @@ cd AfriVox
 export PYTHONPATH=$(pwd):$PYTHONPATH
 ```
 
-## Step 2: Install Requirements
+### Step 2: Install Requirements
 
 Create a new environment and ensure you install all necessary dependencies by running:
 
@@ -47,7 +47,7 @@ pip install -r requirements.txt
 ```
 
 
-## Step 3: Set Model Name/Path
+### Step 3: Set Model Name/Path
 
 Before running the benchmark, you need to specify the model name or path in the script. 
 Open `run_benchmark.sh` and set the model you want to benchmark, the path to the data index and the directory where the audios are stored.
@@ -59,7 +59,7 @@ csv_paths=(path_to_data_index.csv)
 audio_dir=("/data")
 ```
 
-## Step 4: Run the Benchmark
+### Step 4: Run the Benchmark
 
 With the model set up, you can now run the benchmark script from the AfriVox directory:
 
@@ -67,7 +67,7 @@ With the model set up, you can now run the benchmark script from the AfriVox dir
 bash src/inference/run_benchmark.sh
 ```
 
-# Results
+## Results
 Please add your results to this table.
 | Contributor | Model   | Afrispeech | NCHLT | CV  | Intron |
 |------------|---------|------------|------|----|--------|
