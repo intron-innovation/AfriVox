@@ -70,13 +70,13 @@ bash src/inference/run_benchmark.sh
 # Results
 | Contributor | Model   | Afrispeech | NCHLT | CV  | Intron |
 |------------|---------|------------|------|----|--------|
-| Mardhiyah | Canary 1B |        |  |  |   |
+| Mardhiyah | Canary 1B |  0.3803      | 0.1005 |0.0841  |  0.3425 |
 | Mardhiyah | Parakeet TDT 1.1B |        |  |  |   |
-| Mardhiyah | Whisper medium |        |  |  |   |
-| Mardhiyah |Whisper Large v3|        |  |  |   |
-| Mardhiyah | mms-1b-all |        |  |  |   |
-| Gloria |Whisper medium |        |  |  |   |
-| Gloria | Whisper large v3 |        |  |  |   |
+| Mardhiyah | Whisper medium |0.3081        |0.1017  | 0.1239 | 0.3476  |
+| Mardhiyah |Whisper Large v3| 0.2649       |0.101  |0.1254  | 0.2675  |
+| Mardhiyah | mms-1b-all | 0.6119       |0.3211  | 0.2309 |   |
+| Gloria |Whisper medium | 0.3054       | 0.1017 | 0.13 | 0.3473  |
+| Gloria | Whisper large v3 | 0.2656       | 0.101 | 0.1223 |  0.2674 |
 | Aka | Gemini Pro 2 |        |  |  |   |
 | Aka | GPT |        |  |  |   |
 
