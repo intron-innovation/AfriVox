@@ -67,3 +67,18 @@ With the model set up, you can now run the benchmark script from the AfriVox dir
 bash src/inference/run_benchmark.sh
 ```
 
+# Results
+| Contributor | Model   | Afrispeech | NCHLT | CV  | Intron |
+|------------|---------|------------|------|----|--------|
+| Mardhiyah | Canary 1B |        |  |  |   |
+| Mardhiyah | Parakeet TDT 1.1B |        |  |  |   |
+| Mardhiyah | Whisper medium |        |  |  |   |
+| Mardhiyah |Whisper Large v3|        |  |  |   |
+| Mardhiyah | mms-1b-all |        |  |  |   |
+| Gloria |Whisper medium |        |  |  |   |
+| Gloria | Whisper large v3 |        |  |  |   |
+| Aka | Gemini Pro 2 |        |  |  |   |
+| Aka | GPT |        |  |  |   |
+
+
+
