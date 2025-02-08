@@ -68,6 +68,7 @@ bash src/inference/run_benchmark.sh
 ```
 
 # Results
+Please add your results to this table.
 | Contributor | Model   | Afrispeech | NCHLT | CV  | Intron |
 |------------|---------|------------|------|----|--------|
 | Mardhiyah | Canary 1B |  0.3803      | 0.1005 |0.0841  |  0.3425 |
@@ -79,6 +80,7 @@ bash src/inference/run_benchmark.sh
 | Gloria | Whisper large v3 | 0.2656       | 0.101 | 0.1223 |  0.2674 |
 | Aka | Gemini Pro 2 |        |  |  |   |
 | Aka | GPT |        |  |  |   |
+| Mardhiyah | Qwen-Audio |        |  |  |   |
 
 
-
+*Empty columns need further postprocessing
