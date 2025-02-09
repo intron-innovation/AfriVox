@@ -8,7 +8,7 @@ This document contains the evaluation results for various models and language so
 
 ## Whisper large-v3
 
-| Contributor | Language / Source | Intron MT | Fleurs   | CV       | NCHLT  | ALFFA  | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Total      |
+| Contributor | Language / Source | Intron MT | Fleurs   | CV       | NCHLT  | ALFFA  | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Avg      |
 |-------------|-------------------|-----------|----------|----------|--------|--------|-----------|---------|-------------|----------------------------|------------|
 | Busayo    | Afrikaans         | 0.439786  | 0.318936 | 0.406544 | 0.71122| -      | -         | -       | -           | -                          | 0.4691215  |
 | Busayo    | Amharic           | 2.8909    | 2.2385   | 1.9847   | -      | 1.7235 | -         | -       | -           | -                          | 2.2094     |
@@ -23,7 +23,7 @@ This document contains the evaluation results for various models and language so
 
 ## Whisper Medium
 
-| Contributor | Language / Source | Intron MT | Fleurs   | CV       | NCHLT  | ALFFA  | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Total |
+| Contributor | Language / Source | Intron MT | Fleurs   | CV       | NCHLT  | ALFFA  | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Avg |
 |-------------|-------------------|-----------|----------|----------|--------|--------|-----------|---------|-------------|----------------------------|-------|
 | Busayo    | Afrikaans         | 0.930603  | 0.47056  | 0.556473 | 1.01685| -      | -         | -       | 0.7436215   | -                          | -     |
 | Busayo    | Amharic           | 6.747     | 4.5267   | 6.3803   | -      | 5.2004 | -         | -       | 5.7136     | -                          | -     |
@@ -38,7 +38,7 @@ This document contains the evaluation results for various models and language so
 
 ## MMS-1b-all
 
-| Contributor | Language / Source | Intron MT | Fleurs  | CV      | NCHLT  | ALFFA  | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Total       |
+| Contributor | Language / Source | Intron MT | Fleurs  | CV      | NCHLT  | ALFFA  | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Avg       |
 |-------------|-------------------|-----------|---------|---------|--------|--------|-----------|---------|-------------|----------------------------|-------------|
 | Busayo    | Afrikaans         | 0.4578    | 0.2697  | 0.2851  | 0.752  | -      | -         | -       | -           | -                          | 0.44115     |
 | Busayo    | Akan              | 0.686     | -       | -       | -      | -      | -         | -       | 0.8278      | 0.7569                     | -           |
@@ -62,7 +62,7 @@ This document contains the evaluation results for various models and language so
 
 ## SeamlessM4T-v2-Large
 
-| Contributor | Language / Source | Intron MT | Fleurs  | CV     | NCHLT  | ALFFA  | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Total    |
+| Contributor | Language / Source | Intron MT | Fleurs  | CV     | NCHLT  | ALFFA  | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Avg    |
 |-------------|-------------------|-----------|---------|--------|--------|--------|-----------|---------|-------------|----------------------------|----------|
 | Busayo    | Afrikaans         | 0.7965    | 0.7686  | 0.912  | 1.812  | -      | -         | -       | -           | -                          | 1.072275 |
 | Busayo    | Amharic           | 1.8593    | 2.008   | 2.1981 | -      | 1.0624 | -         | -       | -           | -                          | 1.78195  |
@@ -81,6 +81,6 @@ This document contains the evaluation results for various models and language so
 
 ## Canary-1b
 
-| Contributor | Language / Source | Intron MT | Fleurs | CV | NCHLT | ALFFA | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Total   |
+| Contributor | Language / Source | Intron MT | Fleurs | CV | NCHLT | ALFFA | Bible TTS | OpenSLR | NaijaVoices | Ashesi Financial Inclusion | Avg   |
 |-------------|-------------------|-----------|--------|----|-------|-------|-----------|---------|-------------|----------------------------|---------|
 | Busayo    | French            | 0.1678    | -      | -  | -     | -     | 0.0653    | -       | -           | -                          | 0.11655 |
