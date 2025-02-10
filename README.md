@@ -64,6 +64,6 @@ audio_dir=("/data")
 With the model set up, you can now run the benchmark script from the AfriVox directory:
 
 ```bash
-bash src/inference/run_benchmark.sh
+bash run_benchmark.sh
 ```
 
