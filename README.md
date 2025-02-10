@@ -72,7 +72,7 @@ Please add your results to this table.
 | Contributor | Model   | Afrispeech | NCHLT | CV  | Intron |
 |------------|---------|------------|------|----|--------|
 | Mardhiyah | Canary 1B |  0.3803      | 0.1005 |0.0841  |  0.3425 |
-| Mardhiyah | Parakeet TDT 1.1B |        |  |  |   |
+| Mardhiyah | Parakeet TDT 1.1B |  0.3496      | 0.1133 |0.0948  |0.2829   |
 | Mardhiyah | Whisper medium |0.3081        |0.1017  | 0.1239 | 0.3476  |
 | Mardhiyah |Whisper Large v3| 0.2649       |0.101  |0.1254  | 0.2675  |
 | Mardhiyah | mms-1b-all | 0.6119       |0.3211  | 0.2309 |   |
@@ -80,7 +80,7 @@ Please add your results to this table.
 | Gloria | Whisper large v3 | 0.2656       | 0.101 | 0.1223 |  0.2674 |
 | Aka | Gemini Pro 2 |        |  |  |   |
 | Aka | GPT |        |  |  |   |
-| Mardhiyah | Qwen-Audio |        |  |  |   |
+| Mardhiyah | Qwen2-Audio |        |  |  |   |
 
 
 *Empty columns need further postprocessing
