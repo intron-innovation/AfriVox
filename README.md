@@ -71,16 +71,16 @@ bash run_benchmark.sh
 Please add your results to this table.
 | Contributor | Model   | Afrispeech | NCHLT | CV  | Intron |
 |------------|---------|------------|------|----|--------|
-| Mardhiyah | Canary 1B |  0.3803      | 0.1005 |0.0841  |  0.3425 |
-| Mardhiyah | Parakeet TDT 1.1B |  0.3496      | 0.1133 |0.0948  |0.2829   |
-| Mardhiyah | Whisper medium |0.3081        |0.1017  | 0.1239 | 0.3476  |
-| Mardhiyah |Whisper Large v3| 0.2649       |0.101  |0.1254  | 0.2675  |
-| Mardhiyah | mms-1b-all | 0.6119       |0.3211  | 0.2309 |   |
+| Mardhiyah | Canary 1B |  0.3803      | 0.1005 |0.0841  |  0.3386 |
+| Mardhiyah | Parakeet TDT 1.1B |  0.3496      | 0.1133 |0.0948  |0.2820   |
+| Mardhiyah | Whisper medium |0.3081        |0.1017  | 0.1239 | 0.3471  |
+| Mardhiyah |Whisper Large v3| 0.2649       |0.1010  |0.1254  | 0.2673  |
+| Mardhiyah | mms-1b-all | 0.6119       |0.3211  | 0.2309 | 1.1066  |
 | Gloria |Whisper medium | 0.3054       | 0.1017 | 0.13 | 0.3473  |
 | Gloria | Whisper large v3 | 0.2656       | 0.101 | 0.1223 |  0.2674 |
-| Aka | Gemini Pro 2 |        |  |  |   |
-| Aka | GPT |        |  |  |   |
-| Mardhiyah | Qwen2-Audio |        |  |  |   |
+| Aka | Gemini Pro 2 |  0.2812      |0.1419  | 0.1376 | 0.2830  |
+| Aka | GPT-4o-preview |  0.3654      |  |0.2676  | 0.4723  |
+| Mardhiyah | Qwen2-Audio-7B | 0.4961       |0.2514  | 0.1116 |  0.6113 |
 
 
 *Empty columns need further postprocessing
