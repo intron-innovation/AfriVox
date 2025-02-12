@@ -25,12 +25,11 @@ for idx, row in tqdm(df.iterrows(), total=len(df), desc="Processing audio files"
     try:
         # Construct the query for the current audio file
         conversation = [
-            {'role': 'system', 'content': 'You are a helpful assistant.'}, 
-            {"role": "user", "content": [
-                {"type": "audio", "audio_url": row['audio_path']},
-                {"type": "text", "text": "The language is french; Recognize the speech: "},
-            ]}
-        ]
+            {'role': 'system', 'content': 'You are a French speech transcription model. Your only output should be the raw transcription of the provided audio in French. Do not translate, summarize, or add any extra text.'},    {"role": "user", "content": [
+            {"type": "audio", "audio_url": row['audio_path']},
+            {"type": "text", "text": "Transcribe the following audio exactly as spoken in French. Do not translate or include any additional text: "},
+    ]}
+]
         
         text = processor.apply_chat_template(conversation, add_generation_prompt=True, tokenize=False)
         
