@@ -157,6 +157,12 @@ def parse_argument():
     help="id of the whisper model",
     )
 
+    parser.add_argument(
+    "--remove_diacritics",
+    default=False,
+    help="set True to remove_diacritics",
+    )
+
     return parser.parse_args()
 
 

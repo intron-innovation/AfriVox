@@ -61,8 +61,8 @@ def clean_text(text):
     text = re.sub(r"[^a-zA-Z0-9\s\.\,\-\?\:\'\/\(\)\[\]\+\%]", '', text)
     return text
 
-def clean_multilingual_text(text):
-    normalizer = BasicTextNormalizer()
+def clean_multilingual_text(text, remove_diacritics=False):
+    normalizer = BasicTextNormalizer(remove_diacritics=remove_diacritics)
     return normalizer(text)
 
 # def clean_multilingual_text(text):
@@ -234,13 +234,13 @@ def gpt4_correcter(text):
             )
     return response.choices[0].message.content.strip()
             
-def post_process_preds(data, correct=False, non_english=True):
+def post_process_preds(data, correct=False, non_english=True, remove_diacritics=False):
     assert "hypothesis" in data.columns
     assert "reference" in data.columns
 
     if non_english:
-        pred_clean = [clean_multilingual_text(str(text)) for text in data["hypothesis"]]
-        ref_clean = [clean_multilingual_text(str(text)) for text in data["reference"]]
+        pred_clean = [clean_multilingual_text(str(text), remove_diacritics) for text in data["hypothesis"]]
+        ref_clean = [clean_multilingual_text(str(text), remove_diacritics) for text in data["reference"]]
     else:
         pred_clean = [clean_text(str(text)) for text in data["hypothesis"]]
         ref_clean = [clean_text(str(text)) for text in data["reference"]]
@@ -268,9 +268,9 @@ def post_process_preds(data, correct=False, non_english=True):
                 print(f"Autocorrect WER: {llm_wer * 100:.2f} %")
             
     try:
-        normalizer = BasicTextNormalizer() if non_english else EnglishTextNormalizer()
-        pred_normalized = [normalizer(text) for text in data["hypothesis"]]
-        gt_normalized = [normalizer(text) for text in data["reference"]]
+        normalizer = BasicTextNormalizer(remove_diacritics=remove_diacritics) if non_english else EnglishTextNormalizer()
+        pred_normalized = [normalizer(str(text)) for text in data["hypothesis"]]
+        gt_normalized = [normalizer(str(text)) for text in data["reference"]]
     except Exception as e:
         print(f"Error during normalization: {e}")
         print(data["hypothesis"])
@@ -283,8 +283,8 @@ def post_process_preds(data, correct=False, non_english=True):
     whisper_wer = jiwer.wer(gt_normalized, pred_normalized)
     print(f"TextNormalizer WER: {whisper_wer * 100:.2f} %")
 
-    data["hypothesis_clean"] = [normalizer(text) for text in data["hypothesis"]]
-    data["reference_clean"] = [normalizer(text) for text in data["reference"]]
+    data["hypothesis_clean"] = [normalizer(str(text)) for text in data["hypothesis"]]
+    data["reference_clean"] = [normalizer(str(text)) for text in data["reference"]]
             
     return all_wer
 
