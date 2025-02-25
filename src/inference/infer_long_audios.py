@@ -84,7 +84,7 @@ if __name__ == "__main__":
     dataset = dataset[dataset["audio_path"].apply(os.path.exists)]
     results = infer_long_examples(dataset, args, model, processor)
     non_english = args.language != 'english'
-    all_wer = post_process_preds(results, non_english=non_english)
+    all_wer = post_process_preds(results, non_english=non_english, remove_diacritics=args.remove_diacritics)
     write_pred_inference_df(args.model_id_or_path, results, all_wer, language=args.language, split="full_test", source=source)
 
     time_elapsed = int(round(time.time())) - tsince
